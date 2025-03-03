@@ -1,0 +1,740 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1170</width>
+    <height>658</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">*{
+font-family:century gothic ;
+font-size:24px;
+border:none;
+}
+#payment_pdf QPushButton{
+color:white;
+background:#EBEBEB;
+border-radius:15px ;
+}
+#payment_pdf QPushButton:hover{
+color:white;
+background:white;
+border-radius:15px ;
+}
+
+QDialog{
+background:white;
+border-radius:15px ;
+
+}
+QComboBox{color:white;
+background:#8685F5;
+border-radius:15px ;}
+QComboBox:hover{
+color:white;
+background:#6563FF;
+border-radius:15px ;
+}
+QTableView{
+background:#EDEDED;
+}
+
+QFrame{
+background:white;
+}
+QStackedWidget{
+background:#A9A8FF;
+border-radius:15px ;
+}
+QTabWidget{
+
+background:#A9A8FF;
+
+}
+#tab{
+background:transparent;
+border:10px solid #A9A8FF;
+border-radius:0px;
+}
+#tab_2{
+background:transparent;
+border:10px solid #A9A8FF;
+border-radius:0px;
+}
+#leftMenu{
+background:#A9A8FF;
+}
+#leftMenu:hover{
+background:#A9A8FF;
+
+}
+QToolButton{
+background:#A9A8FF;
+border-radius:60px;
+}
+QLabel{
+color:#6563FF;
+}
+#leftMenu QLabel{
+color:white;
+}
+QPushButton{
+color:white;
+background:#8685F5;
+border-radius:15px ;
+}
+QPushButton:hover
+{
+color:white;
+background:#6563FF;
+border-radius:15px ;
+}
+#leftMenu QPushButton{
+color:white;
+background:#EBEBEB;
+border-radius:15px ;
+}
+#leftMenu QPushButton:hover
+{
+color:white;
+background:white;
+border-radius:15px ;
+}
+QLineEdit{
+background:transparent;
+border-radius:14px;
+border:none;
+color:#717072;
+border-bottom:1px solid #717072;
+
+}
+QLineEdit:hover{
+color:black;
+border-bottom:1px solid #6563FF;
+}
+#client1{
+background:white;
+}
+#client2{
+background:white;
+}
+#client1:hover{
+}
+#client2:hover{
+}
+#client_statistic1{
+background:white;
+}
+#client_statistic2{
+background:white;
+}
+#client_statistic1:hover{
+}
+#client_statistic2:hover{
+}
+
+/*payment page */
+#payment1{
+background:white;
+}
+#payment2{
+background:white;
+}
+#payment1:hover{
+}
+#payment2:hover{
+}
+#payment_statistic1{
+background:white;
+}
+#payment_statistic2{
+background:white;
+}
+#payment_statistic1:hover{
+}
+#payment_statistic2:hover{
+}
+#payment_tab1{
+background:transparent;
+border:10px solid #A9A8FF;
+border-radius:0px;
+}
+#payment_tab2{
+background:transparent;
+border:10px solid #A9A8FF;
+border-radius:0px;
+}
+/*-------------------------------------*/
+
+/*reservation page */
+#reservation1{
+background:white;
+}
+#reservation2{
+background:white;
+}
+#reservation1:hover{
+}
+#reservation:hover{
+}
+#reservation_statistic1{
+background:white;
+}
+#reservation_statistic2{
+background:white;
+}
+#reservation_statistic1:hover{
+}
+#reservation_statistic2:hover{
+}
+#reservation_tab1{
+background:transparent;
+border:10px solid #A9A8FF;
+border-radius:0px;
+}
+#reservation_tab2{
+background:transparent;
+border:10px solid #A9A8FF;
+border-radius:0px;
+}
+/*-------------------------------------*/
+
+/*employee page */
+#employee1{
+background:white;
+}
+#employee2{
+background:white;
+}
+#employee1:hover{
+}
+#employee2:hover{
+}
+#employee_statistic1{
+background:white;
+}
+#employee_statistic2{
+background:white;
+}
+#employee_statistic1:hover{
+}
+#employee_statistic2:hover{
+}
+#employee_tab1{
+background:transparent;
+border:10px solid #A9A8FF;
+border-radius:0px;
+}
+#employee_tab2{
+background:transparent;
+border:10px solid #A9A8FF;
+border-radius:0px;
+}
+/*-------------------------------------*/
+
+
+/*accommodation page */
+#accommodation1{
+background:white;
+}
+#accommodation2{
+background:white;
+}
+#accommodation1:hover{
+}
+#accommodation2:hover{
+}
+#accommodation_statistic1{
+background:white;
+}
+#accommodation_statistic2{
+background:white;
+}
+#accommodation_statistic1:hover{
+}
+#accommodation_statistic2:hover{
+}
+#accommodation_tab1{
+background:transparent;
+border:10px solid #A9A8FF ;
+border-radius:0px;
+
+
+}
+#accommodation_tab2{
+background:transparent;
+border:10px solid #A9A8FF;
+border-radius:0px;
+}
+
+/*-------------------------------------*/
+
+
+QListWidget{
+background:#EDEDED;
+}
+#label_6:hover{
+text-decoration: underline;
+}
+#label_7:hover{
+text-decoration: underline;
+}</string>
+  </property>
+  <widget class="QWidget" name="leftMenu" native="true">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>-10</y>
+     <width>291</width>
+     <height>731</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">border-radius:15px;</string>
+   </property>
+   <widget class="QPushButton" name="pushButton_4">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>310</y>
+      <width>75</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>:/feather (3)/users.svg</normaloff>:/feather (3)/users.svg</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>28</width>
+      <height>28</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>291</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:transparent;
+border-radius:0px;
+border-bottom:2px solid white;
+font-size:30px;
+font-weight:700;</string>
+    </property>
+    <property name="text">
+     <string>FullMark</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_6">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>50</y>
+      <width>231</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:transparent;
+border-radius:0px;
+font-size:20px;
+font-weight:700;
+
+</string>
+    </property>
+    <property name="text">
+     <string>  Mon profile</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_7">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>400</y>
+      <width>291</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:transparent;
+border-radius:0px;
+font-size:20px;
+font-weight:700;
+
+
+</string>
+    </property>
+    <property name="text">
+     <string>  Settings</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_8">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>60</y>
+      <width>75</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>:/feather (3)/user.svg</normaloff>:/feather (3)/user.svg</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>28</width>
+      <height>28</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_9">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>410</y>
+      <width>75</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset resource="icons.qrc">
+      <normaloff>:/ressources/settings.svg</normaloff>:/ressources/settings.svg</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>24</width>
+      <height>24</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_8">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>150</y>
+      <width>231</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:transparent;
+border-radius:0px;
+font-size:20px;
+font-weight:700;
+
+</string>
+    </property>
+    <property name="text">
+     <string> Equipement</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>160</y>
+      <width>75</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>:/feather (3)/users.svg</normaloff>:/feather (3)/users.svg</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>28</width>
+      <height>28</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_9">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>200</y>
+      <width>231</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:transparent;
+border-radius:0px;
+font-size:20px;
+font-weight:700;
+
+</string>
+    </property>
+    <property name="text">
+     <string> Examen</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_2">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>210</y>
+      <width>75</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>:/feather (3)/shopping-cart.svg</normaloff>:/feather (3)/shopping-cart.svg</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>28</width>
+      <height>28</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_10">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>250</y>
+      <width>231</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:transparent;
+border-radius:0px;
+font-size:20px;
+font-weight:700;
+
+</string>
+    </property>
+    <property name="text">
+     <string> Institut</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_3">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>260</y>
+      <width>75</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>:/feather (3)/calendar.svg</normaloff>:/feather (3)/calendar.svg</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>28</width>
+      <height>28</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_11">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>300</y>
+      <width>171</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:transparent;
+border-radius:0px;
+font-size:20px;
+font-weight:700;
+
+</string>
+    </property>
+    <property name="text">
+     <string> Livreur</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_12">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>350</y>
+      <width>291</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:transparent;
+border-radius:0px;
+font-size:20px;
+font-weight:700;
+border-bottom:1px solid white;
+
+
+</string>
+    </property>
+    <property name="text">
+     <string>Box</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_5">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>360</y>
+      <width>75</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>:/feather (3)/home.svg</normaloff>:/feather (3)/home.svg</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>28</width>
+      <height>28</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_45">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>450</y>
+      <width>291</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:transparent;
+border-radius:0px;
+font-size:20px;
+font-weight:700;
+
+
+
+</string>
+    </property>
+    <property name="text">
+     <string>  Log out</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_24">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>460</y>
+      <width>75</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>28</width>
+      <height>28</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_13">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>100</y>
+      <width>291</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:transparent;
+border-radius:0px;
+font-size:20px;
+font-weight:700;
+border-bottom:1px solid white;
+
+
+</string>
+    </property>
+    <property name="text">
+     <string> Map</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_10">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>110</y>
+      <width>75</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>:/feather (3)/map.svg</normaloff>:/feather (3)/map.svg</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>28</width>
+      <height>28</height>
+     </size>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QStackedWidget" name="stackedWidget">
+   <property name="geometry">
+    <rect>
+     <x>300</x>
+     <y>10</y>
+     <width>1071</width>
+     <height>651</height>
+    </rect>
+   </property>
+   <widget class="QWidget" name="page_3"/>
+   <widget class="QWidget" name="page_4"/>
+  </widget>
+ </widget>
+ <resources>
+  <include location="icons.qrc"/>
+ </resources>
+ <connections/>
+</ui>
