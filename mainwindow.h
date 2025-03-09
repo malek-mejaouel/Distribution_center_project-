@@ -2,33 +2,38 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QTableWidget>
+#include <QSqlQuery>
+#include <QSqlDatabase>
+#include <QTimer>
 
-QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
 }
-QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
+    explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
 private slots:
-    void on_b1_clicked(); // Ajouter
-    void on_b2_clicked(); // Annuler
-    void on_b3_clicked(); // Modifier
-    void on_b4_clicked(); // Supprimer
-    void on_b5_clicked(); // Afficher les instituts
-    void on_tab1_itemSelectionChanged(); // Sélection d'une ligne
-    void loadInstituts(); // Charger les instituts
+    void loadTableData();  // Charger les données dans QTableWidget
+    void updateTableData();  // Mise à jour automatique avec QTimer
+    void onTableRowClicked(int row, int column);  // Sélectionner une ligne
+    void on_b1_clicked();    // Ajouter un institut
+    void on_b2_clicked();
+    void on_b3_clicked();  // Modifier un institut
+    void on_b4_clicked();  // Supprimer un institut
+    void on_b5_clicked();  // Recherche par ID
+    void sortTableData(int column);  // Trier les données du tableau
 
 private:
     Ui::MainWindow *ui;
-    int currentId; // Pour stocker l'ID de l'institut actuellement sélectionné
+    QString selectedInstitutId;
+    QTimer *timer;  // Timer pour actualisation automatique
 };
 
 #endif // MAINWINDOW_H

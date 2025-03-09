@@ -417,33 +417,6 @@ QTabBar::tab:disabled {
         <string>Annuler</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="b5">
-       <property name="geometry">
-        <rect>
-         <x>440</x>
-         <y>40</y>
-         <width>151</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <family>Tw Cen MT</family>
-         <pointsize>-1</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">  background-color: #FFFFFF;
-    color: #1E2350;
-    border-radius: 10px;
-    font-size: 14px;
-    padding: 8px;</string>
-       </property>
-       <property name="text">
-        <string>afficher les instituts</string>
-       </property>
-      </widget>
       <zorder>label_12</zorder>
       <zorder>label_13</zorder>
       <zorder>label_14</zorder>
@@ -461,7 +434,6 @@ QTabBar::tab:disabled {
       <zorder>nomInst_input</zorder>
       <zorder>b1</zorder>
       <zorder>b2</zorder>
-      <zorder>b5</zorder>
      </widget>
     </widget>
     <widget class="QWidget" name="tab_6">
@@ -482,7 +454,7 @@ QTabBar::tab:disabled {
     <property name="styleSheet">
      <string notr="true">background-color: rgb(255, 255, 255);</string>
     </property>
-    <widget class="QLineEdit" name="lineEdit_8">
+    <widget class="QLineEdit" name="recherche">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -644,7 +616,7 @@ background-color: rgb(179, 179, 179);</string>
       <string>Trier par :</string>
      </property>
     </widget>
-    <widget class="QComboBox" name="comboBox">
+    <widget class="QComboBox" name="tri">
      <property name="geometry">
       <rect>
        <x>470</x>
@@ -655,12 +627,37 @@ background-color: rgb(179, 179, 179);</string>
      </property>
      <item>
       <property name="text">
-       <string>capacite</string>
+       <string>ID</string>
       </property>
      </item>
      <item>
       <property name="text">
-       <string>Type</string>
+       <string>nom</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>adresse</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>email</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>telephone</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>responsable</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>capacite</string>
       </property>
      </item>
     </widget>
@@ -745,7 +742,7 @@ background-color: rgb(179, 179, 179);</string>
       <string>Supprimer</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton_5">
+    <widget class="QPushButton" name="b5">
      <property name="geometry">
       <rect>
        <x>300</x>

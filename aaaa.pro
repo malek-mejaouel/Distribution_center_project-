@@ -11,11 +11,13 @@ QT+= sql
 
 SOURCES += \
     connection.cpp \
+    institut.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
     connection.h \
+    institut.h \
     mainwindow.h
 
 FORMS += \
