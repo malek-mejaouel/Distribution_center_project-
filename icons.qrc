@@ -1,0 +1,17 @@
+<RCC>
+    <qresource prefix="/">
+        <file>ressources/paper-48.png</file>
+        <file>ressources/settings.svg</file>
+        <file>ressources/user.svg</file>
+        <file>ressources/log-out.svg</file>
+        <file>ressources/map.svg</file>
+        <file>ressources/box-3-48.png</file>
+        <file>ressources/building-48.png</file>
+        <file>ressources/delivery-48.png</file>
+        <file>ressources/tool-box-48.png</file>
+        <file>ressources/user-48.png</file>
+        <file>ressources/search-3-48.png</file>
+        <file>ressources/settings-5-48.png</file>
+        <file>ressources/logout-48.png</file>
+    </qresource>
+</RCC>
