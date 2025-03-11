@@ -3,17 +3,47 @@
 
 #include <QString>
 #include <QSqlQueryModel>
-#include <QSqlTableModel>
 
 class Institut
 {
 public:
     Institut();
-    static bool ajouter(const QString &nom, const QString &adresse, const QString &responsable, int telephone, const QString &email, int capacite);
-    static bool modifier(int id, const QString &nom, const QString &adresse, const QString &responsable, int telephone, const QString &email, int capacite);
-    static bool supprimer(int id);
-    static QSqlQueryModel* afficher();  // Retourne les données sous forme de modèle
-    static QSqlQueryModel* rechercherParId(int id); // Recherche un institut par ID
+
+    // Getters
+    int getId() const;
+    QString getNom() const;
+    QString getAdresse() const;
+    QString getResponsable() const;
+    int getTelephone() const;
+    QString getEmail() const;
+    int getCapacite() const;
+
+    // Setters
+    void setId(int id);
+    void setNom(const QString &nom);
+    void setAdresse(const QString &adresse);
+    void setResponsable(const QString &responsable);
+    void setTelephone(int telephone);
+    void setEmail(const QString &email);
+    void setCapacite(int capacite);
+
+    bool ajouter();
+    bool modifier();
+    bool supprimer();
+    QSqlQueryModel* afficher();
+    QSqlQueryModel* rechercherParId();
+
+    // Ajoutez cette déclaration
+    bool validerDonnees();
+
+private:
+    int id;
+    QString nom;
+    QString adresse;
+    QString responsable;
+    int telephone;
+    QString email;
+    int capacite;
 };
 
 #endif // INSTITUT_H

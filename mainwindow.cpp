@@ -16,28 +16,28 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    // Définir les colonnes de tab1
     QStringList headers = {"ID", "Nom", "Adresse", "Responsable", "Téléphone", "Email", "Capacité"};
     ui->tab1->setColumnCount(headers.size());
     ui->tab1->setHorizontalHeaderLabels(headers);
 
-    // Charger les données dès le démarrage
     loadTableData();
 
-    // Créer un timer pour actualiser les données toutes les 5 secondes
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &MainWindow::updateTableData);
-    timer->start(5000);  // 5000 ms = 5 secondes
+    timer->start(5000);
 
-    // Connexion du clic sur une ligne
     connect(ui->tab1, &QTableWidget::cellClicked, this, &MainWindow::onTableRowClicked);
 
-    // Connexion du signal de tri du QComboBox
     connect(ui->tri, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
             [=](int index) {
                 int column = ui->tri->itemData(index).toInt();
                 sortTableData(column);
             });
+    connect(ui->b1, &QPushButton::clicked, this, &MainWindow::on_b1_clicked);
+    connect(ui->b2, &QPushButton::clicked, this, &MainWindow::on_b2_clicked);
+    connect(ui->b3, &QPushButton::clicked, this, &MainWindow::on_b3_clicked);
+    connect(ui->b4, &QPushButton::clicked, this, &MainWindow::on_b4_clicked);
+    connect(ui->b5, &QPushButton::clicked, this, &MainWindow::on_b5_clicked);
 }
 
 MainWindow::~MainWindow()
@@ -47,22 +47,20 @@ MainWindow::~MainWindow()
 
 void MainWindow::loadTableData()
 {
-    QSqlQuery query;
-    query.prepare("SELECT id_inst, nom_inst, adresse_inst, responsable_inst, telephone_inst, email_inst, capacite_inst FROM INSTITUTS");
-
-    if (!query.exec()) {
-        qDebug() << "Erreur de chargement des données : " << query.lastError().text();
-        return;
-    }
+    Institut institut;
+    QSqlQueryModel* model = institut.afficher();
 
     ui->tab1->clearContents();
     ui->tab1->setRowCount(0);
 
     int row = 0;
-    while (query.next()) {
+    while (model->canFetchMore()) {
+        model->fetchMore();
+    }
+    for (int i = 0; i < model->rowCount(); ++i) {
         ui->tab1->insertRow(row);
-        for (int col = 0; col < 7; col++) {
-            ui->tab1->setItem(row, col, new QTableWidgetItem(query.value(col).toString()));
+        for (int col = 0; col < model->columnCount(); col++) {
+            ui->tab1->setItem(row, col, new QTableWidgetItem(model->data(model->index(i, col)).toString()));
         }
         row++;
     }
@@ -89,24 +87,33 @@ void MainWindow::onTableRowClicked(int row, int column)
     ui->capaciteInst_input->setText(ui->tab1->item(row, 6)->text());
 }
 
-void MainWindow::on_b1_clicked() // Ajouter
+void MainWindow::on_b1_clicked()
 {
-    if (Institut::ajouter(ui->nomInst_input->text(),
-                          ui->adresseInst_input->text(),
-                          ui->responsableInst_input->text(),
-                          ui->telephoneInst_input->text().toInt(),
-                          ui->emailInst_input->text(),
-                          ui->capaciteInst_input->text().toInt())) {
+    Institut institut;
+    institut.setNom(ui->nomInst_input->text());
+    institut.setAdresse(ui->adresseInst_input->text());
+    institut.setResponsable(ui->responsableInst_input->text());
+    institut.setTelephone(ui->telephoneInst_input->text().toInt());
+    institut.setEmail(ui->emailInst_input->text());
+    institut.setCapacite(ui->capaciteInst_input->text().toInt());
+
+    // Vérification des données avant d'essayer l'ajout
+    if (!institut.validerDonnees()) {
+        QMessageBox::critical(this, "Erreur", "Les données saisies ne sont pas valides !");
+        return;  // Stopper l'exécution ici si validation échoue
+    }
+
+    // Tentative d'ajout
+    if (institut.ajouter()) {
         QMessageBox::information(this, "Succès", "Institut ajouté avec succès !");
         loadTableData();
-    } else {
-        QMessageBox::critical(this, "Erreur", "Échec de l'ajout.");
     }
 }
 
-void MainWindow::on_b2_clicked() // Annuler
+
+
+void MainWindow::on_b2_clicked()
 {
-    // Réinitialiser les champs d'entrée à vide
     ui->nomInst_input->clear();
     ui->adresseInst_input->clear();
     ui->responsableInst_input->clear();
@@ -115,46 +122,48 @@ void MainWindow::on_b2_clicked() // Annuler
     ui->capaciteInst_input->clear();
 }
 
-void MainWindow::on_b3_clicked() // Modifier
+void MainWindow::on_b3_clicked()
 {
     if (selectedInstitutId == "-1" || selectedInstitutId.isEmpty()) {
         QMessageBox::warning(this, "Erreur", "Aucun institut sélectionné.");
         return;
     }
 
-    int id = selectedInstitutId.toInt();
+    Institut institut;
+    institut.setId(selectedInstitutId.toInt());
+    institut.setNom(ui->nomInst_input->text());
+    institut.setAdresse(ui->adresseInst_input->text());
+    institut.setResponsable(ui->responsableInst_input->text());
+    institut.setTelephone(ui->telephoneInst_input->text().toInt());
+    institut.setEmail(ui->emailInst_input->text());
+    institut.setCapacite(ui->capaciteInst_input->text().toInt());
 
-    bool success = Institut::modifier(id,
-                                      ui->nomInst_input->text(),
-                                      ui->adresseInst_input->text(),
-                                      ui->responsableInst_input->text(),
-                                      ui->telephoneInst_input->text().toInt(),
-                                      ui->emailInst_input->text(),
-                                      ui->capaciteInst_input->text().toInt());
+    bool success = institut.modifier();
 
     if (success) {
         QMessageBox::information(this, "Succès", "Institut modifié !");
-        loadTableData();
-    } else {
-        QMessageBox::critical(this, "Erreur", "Échec de la modification.");
+        loadTableData();}
+    else {
+        QMessageBox::critical(this, "Erreur", "Échec de la modification. Veuillez vérifier les données saisies.");
     }
 }
 
-void MainWindow::on_b4_clicked() // Supprimer
+void MainWindow::on_b4_clicked()
 {
     if (selectedInstitutId == "-1") {
         QMessageBox::warning(this, "Erreur", "Aucun institut sélectionné.");
         return;
     }
 
-    int id = selectedInstitutId.toInt();
+    Institut institut;
+    institut.setId(selectedInstitutId.toInt());
 
     QMessageBox::StandardButton reply;
     reply = QMessageBox::question(this, "Confirmation", "Êtes-vous sûr de vouloir supprimer cet institut ?",
                                   QMessageBox::Yes | QMessageBox::No);
 
     if (reply == QMessageBox::Yes) {
-        bool success = Institut::supprimer(id);
+        bool success = institut.supprimer();
         if (success) {
             QMessageBox::information(this, "Succès", "Institut supprimé !");
             loadTableData();
@@ -164,7 +173,7 @@ void MainWindow::on_b4_clicked() // Supprimer
     }
 }
 
-void MainWindow::on_b5_clicked() // Recherche par ID
+void MainWindow::on_b5_clicked()
 {
     bool ok;
     int id = ui->recherche->text().toInt(&ok);
@@ -174,7 +183,9 @@ void MainWindow::on_b5_clicked() // Recherche par ID
         return;
     }
 
-    QSqlQueryModel* model = Institut::rechercherParId(id);
+    Institut institut;
+    institut.setId(id);
+    QSqlQueryModel* model = institut.rechercherParId();
 
     if (model->rowCount() == 0) {
         QMessageBox::information(this, "Aucun résultat", "Aucun institut trouvé.");
@@ -193,13 +204,11 @@ void MainWindow::on_b5_clicked() // Recherche par ID
 
 void MainWindow::sortTableData(int column)
 {
-    // Vérifier si la colonne est numérique
     bool isNumeric = (column == 0 || column == 4 || column == 6);
 
     ui->tab1->sortItems(column, isNumeric ? Qt::AscendingOrder : Qt::AscendingOrder);
 
     if (isNumeric) {
-        // Trier les lignes en fonction de la colonne numérique
         for (int row = 0; row < ui->tab1->rowCount(); ++row) {
             bool ok;
             int value = ui->tab1->item(row, column)->text().toInt(&ok);
@@ -210,7 +219,6 @@ void MainWindow::sortTableData(int column)
         }
         ui->tab1->sortItems(column, Qt::AscendingOrder);
     } else {
-        // Trier les lignes en fonction de la colonne alphabétique
         ui->tab1->sortItems(column, Qt::AscendingOrder);
     }
 }
