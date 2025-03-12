@@ -46,7 +46,7 @@ public:
 
     // Méthodes CRUD
     bool ajouter();
-    bool modifier(int id);
+    bool modifier(int cin, QString nom, QString prenom, QString email, int telephone, QString date_employe, QString modpass, QString role);
     bool supprimer(int cin);
     QSqlQueryModel* afficher();
     QSqlQueryModel* rechercher(int cin);

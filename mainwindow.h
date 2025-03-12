@@ -23,16 +23,21 @@ private slots:
     void on_pushButton_11_clicked(); // Slot for the button click
     void onRoleSelected();
        // Slot for radio button selection
-
+ void on_tableView_clicked(const QModelIndex &index);
     void on_searchbutt_clicked();
 
     void on_deletebutt_clicked();
 
+    void on_pushButton_18_clicked();
+
 private:
     Ui::MainWindow *ui;
     QSqlQueryModel *model;
-
+int selectedCin;
     void loadDatabase();
+void resetSequenceIfEmpty();
+    bool validateInputs();
+
 };
 
 #endif // MAINWINDOW_H
