@@ -11,7 +11,7 @@ private:
     QString nom;
     QString prenom;
     QString email;
-    QString modpass;  // 🔹 Ajout du champ manquant
+    QString modpass;
     int telephone;
     int cin;
     QString date_embauche;
@@ -28,7 +28,7 @@ public:
     QString getNom() const;
     QString getPrenom() const;
     QString getEmail() const;
-    QString getModpass() const;  // 🔹 Correction : renommé en getModpass()
+    QString getModpass() const;
     int getTelephone() const;
     int getCin() const;
     QString getDateEmbauche() const;
@@ -38,7 +38,7 @@ public:
     void setNom(QString nom);
     void setPrenom(QString prenom);
     void setEmail(QString email);
-    void setModpass(QString modpass);  // 🔹 Correction : renommé en setModpass()
+    void setModpass(QString modpass);
     void setTelephone(int telephone);
     void setCin(int cin);
     void setDateEmbauche(QString date_embauche);

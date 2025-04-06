@@ -39,7 +39,7 @@ bool Employe::ajouter() {
     query.bindValue(":nom", nom);
     query.bindValue(":id", id);
     query.bindValue(":prenom", prenom);
-    query.bindValue(":modpass", modpass);  // Ajout du champ modpass
+    query.bindValue(":modpass", modpass);
     query.bindValue(":email", email);
     query.bindValue(":telephone", telephone);
     query.bindValue(":cin", cin);
