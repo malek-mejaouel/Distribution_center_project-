@@ -559,7 +559,7 @@ QTabBar::tab:disabled {
 </string>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="widget">
      <attribute name="title">
@@ -1080,6 +1080,16 @@ QTabBar::tab:disabled {
      <attribute name="title">
       <string>Fonctionalités</string>
      </attribute>
+     <widget class="QListWidget" name="statsList">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>591</width>
+        <height>251</height>
+       </rect>
+      </property>
+     </widget>
     </widget>
    </widget>
   </widget>

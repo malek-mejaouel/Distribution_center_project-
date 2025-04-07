@@ -18,6 +18,7 @@
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
+#include <QtWidgets/QListWidget>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
@@ -81,6 +82,7 @@ public:
     QRadioButton *r6;
     QPushButton *pushButton_18;
     QWidget *tab_6;
+    QListWidget *statsList;
     QMenuBar *menubar;
 
     void setupUi(QMainWindow *MainWindow)
@@ -506,6 +508,9 @@ public:
         tabWidget->addTab(widget, QString());
         tab_6 = new QWidget();
         tab_6->setObjectName("tab_6");
+        statsList = new QListWidget(tab_6);
+        statsList->setObjectName("statsList");
+        statsList->setGeometry(QRect(0, 0, 591, 251));
         tabWidget->addTab(tab_6, QString());
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
@@ -515,7 +520,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        tabWidget->setCurrentIndex(0);
+        tabWidget->setCurrentIndex(1);
 
 
         QMetaObject::connectSlotsByName(MainWindow);

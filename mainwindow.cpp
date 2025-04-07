@@ -292,3 +292,27 @@ void MainWindow::resetSequenceIfEmpty() {
 
 
 
+
+void MainWindow::on_tabWidget_tabBarClicked(int index)
+{
+
+        QSqlQuery query;
+        query.prepare("SELECT ROLE, COUNT(*) FROM EMPLOYEES GROUP BY ROLE");
+
+        if (query.exec()) {
+            ui->statsList->clear(); // Clear previous stats
+
+            while (query.next()) {
+                QString role = query.value(0).toString();
+                int count = query.value(1).toInt();
+                QString statLine = QString("%1 : %2 employé(s)").arg(role).arg(count);
+                ui->statsList->addItem(statLine); // Add to the list
+            }
+        } else {
+            ui->statsList->clear();
+            ui->statsList->addItem("Erreur lors du chargement des statistiques !");
+        }
+    }
+
+
+
