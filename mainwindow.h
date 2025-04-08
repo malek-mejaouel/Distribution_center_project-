@@ -32,9 +32,15 @@ private slots:
 
     void on_tabWidget_tabBarClicked(int index);
 
+    void on_pdf_clicked();
+
+    void on_comboBox_currentIndexChanged(int index);
+
 private:
     Ui::MainWindow *ui;
     QSqlQueryModel *model;
+    bool isAscendingOrder = true; // ou false si tu veux un tri DESC par défaut
+
 int selectedCin;
     void loadDatabase();
 void resetSequenceIfEmpty();

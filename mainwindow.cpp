@@ -5,6 +5,10 @@
 #include <QMessageBox>
 #include <QSqlQuery>
 #include <QSqlError>
+#include <QFileDialog>     // <== Ajoute ceci
+#include <QPrinter>        // Pour l'export PDF
+#include <QPainter>        // Pour dessiner le PDF
+#include <QPageLayout>     // Pour gérer les marges
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -316,3 +320,87 @@ void MainWindow::on_tabWidget_tabBarClicked(int index)
 
 
 
+
+    void MainWindow::on_pdf_clicked()
+    {
+        QString fileName = QFileDialog::getSaveFileName(this, "Exporter en PDF", "", "PDF Files (*.pdf)");
+        if (fileName.isEmpty()) return;
+
+        QPrinter printer(QPrinter::HighResolution);
+        printer.setOutputFormat(QPrinter::PdfFormat);
+        printer.setOutputFileName(fileName);
+
+        QPainter painter;
+        if (!painter.begin(&printer)) {
+            QMessageBox::critical(this, "Erreur", "Erreur lors de l'exportation en PDF !");
+            return;
+        }
+
+        QAbstractItemModel *model = ui->tableView->model();
+        if (!model) {
+            QMessageBox::warning(this, "Erreur", "Aucune donnée à exporter !");
+            return;
+        }
+
+        int rowCount = model->rowCount();
+        int columnCount = model->columnCount();
+
+        QFont font = painter.font();
+        font.setPointSize(10);
+        painter.setFont(font);
+
+        int startX = 20;
+        int startY = 50;
+        int lineHeight = 25;
+        int columnWidth = 120;  // Ajuste selon la taille des colonnes
+
+        // Dessiner les en-têtes
+        for (int col = 0; col < columnCount; ++col) {
+            QString header = model->headerData(col, Qt::Horizontal).toString();
+            painter.drawText(startX + col * columnWidth, startY, header);
+        }
+
+        // Dessiner une ligne sous les en-têtes
+        painter.drawLine(startX, startY + 5, startX + columnCount * columnWidth, startY + 5);
+
+        // Dessiner les données
+        for (int row = 0; row < rowCount; ++row) {
+            for (int col = 0; col < columnCount; ++col) {
+                QString data = model->data(model->index(row, col)).toString();
+                painter.drawText(startX + col * columnWidth, startY + (row + 1) * lineHeight, data);
+            }
+        }
+
+        painter.end();
+        QMessageBox::information(this, "Succès", "Exportation en PDF réussie !");
+    }
+
+    void MainWindow::on_comboBox_currentIndexChanged(int index)
+    {
+        QString attribut;
+        switch (index) {
+        case 0: attribut = "NOM_EMPLOYE"; break;
+        case 1: attribut = "PRENOM_EMPLOYE"; break;
+        case 2: attribut = "TELEPHONE"; break;
+        case 3: attribut = "EMAIL"; break;
+        case 4: attribut = "DATE_EMPLOYE"; break;
+        case 5: attribut = "ROLE"; break;
+        default: return;
+        }
+
+        QString order = isAscendingOrder ? "ASC" : "DESC";
+
+        QSqlQuery query;
+        query.prepare("SELECT ID_EMPLOYE, NOM_EMPLOYE, PRENOM_EMPLOYE, TELEPHONE, MODPASS, EMAIL, DATE_EMPLOYE, ROLE "
+                      "FROM EMPLOYEES ORDER BY " + attribut + " " + order);
+
+        if (!query.exec()) {
+            QMessageBox::critical(this, "Erreur", "Erreur lors du tri des employés : " + query.lastError().text());
+            return;
+        }
+
+        QSqlQueryModel* sortedModel = new QSqlQueryModel(this);
+        sortedModel->setQuery(query);
+        ui->tableView->setModel(sortedModel);
+        ui->tableView->resizeColumnsToContents();
+    }

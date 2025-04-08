@@ -295,6 +295,7 @@ Makefile: ../../emp.pro E:/qt/6.7.2/mingw_64/mkspecs/win32-g++/qmake.conf E:/qt/
 		E:/qt/6.7.2/mingw_64/mkspecs/features/yacc.prf \
 		E:/qt/6.7.2/mingw_64/mkspecs/features/lex.prf \
 		../../emp.pro \
+		E:/qt/6.7.2/mingw_64/lib/Qt6PrintSupport.prl \
 		E:/qt/6.7.2/mingw_64/lib/Qt6Widgets.prl \
 		E:/qt/6.7.2/mingw_64/lib/Qt6Gui.prl \
 		E:/qt/6.7.2/mingw_64/lib/Qt6Sql.prl \
@@ -528,6 +529,7 @@ E:/qt/6.7.2/mingw_64/mkspecs/features/exceptions.prf:
 E:/qt/6.7.2/mingw_64/mkspecs/features/yacc.prf:
 E:/qt/6.7.2/mingw_64/mkspecs/features/lex.prf:
 ../../emp.pro:
+E:/qt/6.7.2/mingw_64/lib/Qt6PrintSupport.prl:
 E:/qt/6.7.2/mingw_64/lib/Qt6Widgets.prl:
 E:/qt/6.7.2/mingw_64/lib/Qt6Gui.prl:
 E:/qt/6.7.2/mingw_64/lib/Qt6Sql.prl:

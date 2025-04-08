@@ -83,6 +83,7 @@ public:
     QPushButton *pushButton_18;
     QWidget *tab_6;
     QListWidget *statsList;
+    QPushButton *pdf;
     QMenuBar *menubar;
 
     void setupUi(QMainWindow *MainWindow)
@@ -510,7 +511,10 @@ public:
         tab_6->setObjectName("tab_6");
         statsList = new QListWidget(tab_6);
         statsList->setObjectName("statsList");
-        statsList->setGeometry(QRect(0, 0, 591, 251));
+        statsList->setGeometry(QRect(0, 0, 601, 171));
+        pdf = new QPushButton(tab_6);
+        pdf->setObjectName("pdf");
+        pdf->setGeometry(QRect(50, 200, 80, 24));
         tabWidget->addTab(tab_6, QString());
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
@@ -520,7 +524,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        tabWidget->setCurrentIndex(1);
+        tabWidget->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -566,6 +570,7 @@ public:
         r6->setText(QCoreApplication::translate("MainWindow", "R.Box", nullptr));
         pushButton_18->setText(QCoreApplication::translate("MainWindow", "Modifier", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(widget), QCoreApplication::translate("MainWindow", "Ajouter Employ\303\251", nullptr));
+        pdf->setText(QCoreApplication::translate("MainWindow", "Export pdf", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(tab_6), QCoreApplication::translate("MainWindow", "Fonctionalit\303\251s", nullptr));
     } // retranslateUi
 

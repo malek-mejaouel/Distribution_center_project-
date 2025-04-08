@@ -559,7 +559,7 @@ QTabBar::tab:disabled {
 </string>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="widget">
      <attribute name="title">
@@ -1085,9 +1085,22 @@ QTabBar::tab:disabled {
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>591</width>
-        <height>251</height>
+        <width>601</width>
+        <height>171</height>
        </rect>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pdf">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>200</y>
+        <width>80</width>
+        <height>24</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Export pdf</string>
       </property>
      </widget>
     </widget>
