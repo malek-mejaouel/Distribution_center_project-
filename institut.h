@@ -3,11 +3,13 @@
 
 #include <QString>
 #include <QSqlQueryModel>
+#include <QList>
 
 class Institut
 {
 public:
     Institut();
+    virtual ~Institut() = default;
 
     // Getters
     int getId() const;
@@ -17,6 +19,7 @@ public:
     int getTelephone() const;
     QString getEmail() const;
     int getCapacite() const;
+    int getIdEmployee() const;
 
     // Setters
     void setId(int id);
@@ -26,15 +29,35 @@ public:
     void setTelephone(int telephone);
     void setEmail(const QString &email);
     void setCapacite(int capacite);
+    void setIdEmployee(int idEmployee);
 
+
+    // Database operations
     bool ajouter();
     bool modifier();
     bool supprimer();
     QSqlQueryModel* afficher();
-    QSqlQueryModel* rechercherParId();
+    QSqlQueryModel* rechercherParId(int id);
+    QSqlQueryModel* trier(const QString &critere, const QString &ordre);
 
-    // Ajoutez cette déclaration
+    // Validation
     bool validerDonnees();
+    bool validerDonnees(QString &erreur);
+
+    // Statistics
+    void calculerStatistiquesCapacite(int &total, double &average, int &min, int &max);
+
+    // PDF export
+    bool exporterPDF(const QString &filePath);
+
+    // Notifications
+    bool envoyerNotification(int idEmploye, const QString &message);
+    void logNotification(const QString &title, const QString &message);
+    QSqlQueryModel* getNotifications();
+
+    // Employees
+    QList<int> obtenirIdsEmployes();
+    bool associerEmploye(int idInstitut, int idEmploye);
 
 private:
     int id;
@@ -44,6 +67,7 @@ private:
     int telephone;
     QString email;
     int capacite;
+    int idEmployee;
 };
 
 #endif // INSTITUT_H

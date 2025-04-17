@@ -1,15 +1,24 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-
-#include <QMainWindow>
-#include <QTableWidget>
+#include <QtCharts/QChartView>
+#include <QtCharts/QChart>
+#include <QtCharts/QBarSet>
+#include <QtCharts/QBarSeries>
+#include <QtCharts/QBarCategoryAxis>
+#include <QtCharts/QValueAxis>
 #include <QSqlQuery>
-#include <QSqlDatabase>
-#include <QTimer>
+#include <QNetworkReply> // Pour QNetworkReply
+#include <QtCharts> // Pour les graphiques
+#include <QMainWindow>
+#include <QNetworkAccessManager>
+#include <QSystemTrayIcon>
+#include <QtQuickWidgets/QQuickWidget>
+#include "institut.h"
+#include "markermodel.h"
 
-namespace Ui {
-class MainWindow;
-}
+QT_BEGIN_NAMESPACE
+namespace Ui { class MainWindow; }
+QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow
 {
@@ -22,18 +31,54 @@ public:
 private slots:
     void loadTableData();
     void updateTableData();
-    void onTableRowClicked(int row, int column);
+    void onTableRowClicked();
     void on_b1_clicked();
     void on_b2_clicked();
     void on_b3_clicked();
     void on_b4_clicked();
-    void on_b5_clicked();
-    void sortTableData(int column);
+    void onTriComboBoxChanged(int index);
+    void onCroissantButtonClicked();
+    void onDecroissantButtonClicked();
+    void onRechercheIdTextChanged(const QString &text);
+    void afficherStatistiquesCapacite();
+    void on_pdf_clicked();
+    void on_noti_clicked();
+    void showNotificationDialogLayout();
+    void showNotificationInLayout(const QString &employeeId, const QString &message, const QString &institutName, const QString &institutId);
+    void notifyUser(const QString &title, const QString &message, QSystemTrayIcon::MessageIcon icon = QSystemTrayIcon::Information);
+    bool employeeExists(const QString &employeeId);
+    void on_map_clicked();
+    void afficherIdsEmployes();
+    void loadEmployeeNames();
+    void onGeoCodeReply(QNetworkReply* reply);
+    void searchLocation(const QString &address);
+
 
 private:
     Ui::MainWindow *ui;
     QString selectedInstitutId;
+    QString currentOrder;
     QTimer *timer;
+    QTimer *searchTimer;
+    QDialog *notificationDialog;
+    QDialog *mapDialog;
+    QSystemTrayIcon *trayIcon;
+    QNetworkAccessManager *networkManager; // Déclaration de networkManager
+
+    MarkerModel m_markerModel;
+
+    void updateTableWithModel(QSqlQueryModel *model);
+    void performSearch(const QString &text);
+    void performSorting(const QString &order);
+    bool isInstitutSelected();
+    void searchInstitut(const QString &name);
+
+    double latitude;
+    double longitude;
+
+signals:
+    void marqueurAjoute(double lat, double lon);
+    void centerMap(double lat, double lon);
 };
 
 #endif // MAINWINDOW_H

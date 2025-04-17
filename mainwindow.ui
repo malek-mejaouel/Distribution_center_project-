@@ -72,6 +72,12 @@ QTabBar::tab:disabled {
     <property name="currentIndex">
      <number>0</number>
     </property>
+    <property name="iconSize">
+     <size>
+      <width>45</width>
+      <height>45</height>
+     </size>
+    </property>
     <widget class="QWidget" name="widget">
      <attribute name="title">
       <string>Ajouter une Institut</string>
@@ -92,7 +98,7 @@ QTabBar::tab:disabled {
        <property name="geometry">
         <rect>
          <x>120</x>
-         <y>90</y>
+         <y>60</y>
          <width>81</width>
          <height>31</height>
         </rect>
@@ -111,7 +117,7 @@ QTabBar::tab:disabled {
        <property name="geometry">
         <rect>
          <x>120</x>
-         <y>120</y>
+         <y>90</y>
          <width>81</width>
          <height>31</height>
         </rect>
@@ -130,7 +136,7 @@ QTabBar::tab:disabled {
        <property name="geometry">
         <rect>
          <x>120</x>
-         <y>150</y>
+         <y>120</y>
          <width>81</width>
          <height>31</height>
         </rect>
@@ -149,7 +155,7 @@ QTabBar::tab:disabled {
        <property name="geometry">
         <rect>
          <x>120</x>
-         <y>180</y>
+         <y>150</y>
          <width>81</width>
          <height>31</height>
         </rect>
@@ -168,7 +174,7 @@ QTabBar::tab:disabled {
        <property name="geometry">
         <rect>
          <x>120</x>
-         <y>210</y>
+         <y>180</y>
          <width>81</width>
          <height>31</height>
         </rect>
@@ -187,7 +193,7 @@ QTabBar::tab:disabled {
        <property name="geometry">
         <rect>
          <x>120</x>
-         <y>240</y>
+         <y>210</y>
          <width>141</width>
          <height>31</height>
         </rect>
@@ -199,14 +205,14 @@ QTabBar::tab:disabled {
     font-family: &quot;Poppins&quot;;</string>
        </property>
        <property name="text">
-        <string>capacite</string>
+        <string>Capacite</string>
        </property>
       </widget>
       <widget class="QLineEdit" name="nomInst_input">
        <property name="geometry">
         <rect>
          <x>250</x>
-         <y>100</y>
+         <y>70</y>
          <width>141</width>
          <height>16</height>
         </rect>
@@ -219,7 +225,7 @@ QTabBar::tab:disabled {
        <property name="geometry">
         <rect>
          <x>250</x>
-         <y>130</y>
+         <y>100</y>
          <width>141</width>
          <height>16</height>
         </rect>
@@ -232,7 +238,7 @@ QTabBar::tab:disabled {
        <property name="geometry">
         <rect>
          <x>250</x>
-         <y>160</y>
+         <y>130</y>
          <width>141</width>
          <height>16</height>
         </rect>
@@ -245,7 +251,7 @@ QTabBar::tab:disabled {
        <property name="geometry">
         <rect>
          <x>250</x>
-         <y>190</y>
+         <y>160</y>
          <width>141</width>
          <height>16</height>
         </rect>
@@ -258,7 +264,7 @@ QTabBar::tab:disabled {
        <property name="geometry">
         <rect>
          <x>250</x>
-         <y>220</y>
+         <y>190</y>
          <width>141</width>
          <height>16</height>
         </rect>
@@ -271,7 +277,7 @@ QTabBar::tab:disabled {
        <property name="geometry">
         <rect>
          <x>250</x>
-         <y>250</y>
+         <y>220</y>
          <width>141</width>
          <height>16</height>
         </rect>
@@ -283,8 +289,8 @@ QTabBar::tab:disabled {
       <widget class="QLabel" name="label_18">
        <property name="geometry">
         <rect>
-         <x>30</x>
-         <y>50</y>
+         <x>20</x>
+         <y>30</y>
          <width>161</width>
          <height>31</height>
         </rect>
@@ -366,9 +372,9 @@ QTabBar::tab:disabled {
       <widget class="QPushButton" name="b1">
        <property name="geometry">
         <rect>
-         <x>450</x>
+         <x>440</x>
          <y>230</y>
-         <width>71</width>
+         <width>81</width>
          <height>31</height>
         </rect>
        </property>
@@ -388,6 +394,15 @@ QTabBar::tab:disabled {
        </property>
        <property name="text">
         <string>Valider</string>
+       </property>
+       <property name="icon">
+        <iconset theme="QIcon::ThemeIcon::ListAdd"/>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>14</width>
+         <height>14</height>
+        </size>
        </property>
       </widget>
       <widget class="QPushButton" name="b2">
@@ -416,6 +431,44 @@ QTabBar::tab:disabled {
        <property name="text">
         <string>Annuler</string>
        </property>
+       <property name="icon">
+        <iconset theme="QIcon::ThemeIcon::ApplicationExit"/>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>12</width>
+         <height>12</height>
+        </size>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_19">
+       <property name="geometry">
+        <rect>
+         <x>120</x>
+         <y>240</y>
+         <width>141</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color: rgb(0, 0, 0);
+ font-size: 13px;
+    font-weight: bold;
+    font-family: &quot;Poppins&quot;;</string>
+       </property>
+       <property name="text">
+        <string>Employee</string>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="employee">
+       <property name="geometry">
+        <rect>
+         <x>240</x>
+         <y>250</y>
+         <width>161</width>
+         <height>22</height>
+        </rect>
+       </property>
       </widget>
       <zorder>label_12</zorder>
       <zorder>label_13</zorder>
@@ -434,12 +487,158 @@ QTabBar::tab:disabled {
       <zorder>nomInst_input</zorder>
       <zorder>b1</zorder>
       <zorder>b2</zorder>
+      <zorder>label_19</zorder>
+      <zorder>employee</zorder>
      </widget>
     </widget>
     <widget class="QWidget" name="tab_6">
      <attribute name="title">
       <string>Fonctionalités</string>
      </attribute>
+     <widget class="QPushButton" name="stat">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>40</y>
+        <width>131</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Tw Cen MT</family>
+        <pointsize>-1</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">  background-color: #FFFFFF;
+    color: #1E2350;
+    border-radius: 10px;
+    font-size: 14px;
+    padding: 8px;</string>
+      </property>
+      <property name="text">
+       <string>Statistiques</string>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normalon>ressources/stat.jpg</normalon>
+       </iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>30</width>
+        <height>30</height>
+       </size>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pdf">
+      <property name="geometry">
+       <rect>
+        <x>80</x>
+        <y>120</y>
+        <width>71</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Tw Cen MT</family>
+        <pointsize>-1</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">  background-color: #FFFFFF;
+    color: #1E2350;
+    border-radius: 10px;
+    font-size: 14px;
+    padding: 8px;</string>
+      </property>
+      <property name="text">
+       <string>PDF</string>
+      </property>
+      <property name="icon">
+       <iconset theme="document-page-setup"/>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="map">
+      <property name="geometry">
+       <rect>
+        <x>380</x>
+        <y>120</y>
+        <width>91</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Tw Cen MT</family>
+        <pointsize>-1</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">  background-color: #FFFFFF;
+    color: #1E2350;
+    border-radius: 10px;
+    font-size: 14px;
+    padding: 8px;</string>
+      </property>
+      <property name="text">
+       <string>Maps</string>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normalon>ressources/maps.png</normalon>
+       </iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>20</width>
+        <height>20</height>
+       </size>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="noti">
+      <property name="geometry">
+       <rect>
+        <x>360</x>
+        <y>40</y>
+        <width>131</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Tw Cen MT</family>
+        <pointsize>-1</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">  background-color: #FFFFFF;
+    color: #1E2350;
+    border-radius: 10px;
+    font-size: 14px;
+    padding: 8px;</string>
+      </property>
+      <property name="text">
+       <string>Notification</string>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normalon>ressources/noti.png</normalon>
+       </iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>20</width>
+        <height>20</height>
+       </size>
+      </property>
+     </widget>
     </widget>
    </widget>
    <widget class="QWidget" name="horizontalWidget" native="true">
@@ -459,7 +658,7 @@ QTabBar::tab:disabled {
       <rect>
        <x>10</x>
        <y>40</y>
-       <width>281</width>
+       <width>251</width>
        <height>16</height>
       </rect>
      </property>
@@ -486,9 +685,9 @@ QTabBar::tab:disabled {
     <widget class="QTableWidget" name="tab1">
      <property name="geometry">
       <rect>
-       <x>10</x>
+       <x>0</x>
        <y>60</y>
-       <width>581</width>
+       <width>801</width>
        <height>211</height>
       </rect>
      </property>
@@ -550,7 +749,7 @@ background-color: rgb(179, 179, 179);</string>
      </column>
      <column>
       <property name="text">
-       <string>Email</string>
+       <string>Responsable</string>
       </property>
       <property name="background">
        <color>
@@ -574,7 +773,7 @@ background-color: rgb(179, 179, 179);</string>
      </column>
      <column>
       <property name="text">
-       <string>Responsable</string>
+       <string>Email</string>
       </property>
       <property name="background">
        <color>
@@ -596,11 +795,23 @@ background-color: rgb(179, 179, 179);</string>
        </color>
       </property>
      </column>
+     <column>
+      <property name="text">
+       <string>ID Employee</string>
+      </property>
+      <property name="background">
+       <color>
+        <red>10</red>
+        <green>21</green>
+        <blue>91</blue>
+       </color>
+      </property>
+     </column>
     </widget>
     <widget class="QLabel" name="label_11">
      <property name="geometry">
       <rect>
-       <x>390</x>
+       <x>370</x>
        <y>30</y>
        <width>71</width>
        <height>21</height>
@@ -619,7 +830,7 @@ background-color: rgb(179, 179, 179);</string>
     <widget class="QComboBox" name="tri">
      <property name="geometry">
       <rect>
-       <x>470</x>
+       <x>440</x>
        <y>30</y>
        <width>91</width>
        <height>24</height>
@@ -661,91 +872,10 @@ background-color: rgb(179, 179, 179);</string>
       </property>
      </item>
     </widget>
-    <widget class="QPushButton" name="pushButton_14">
-     <property name="geometry">
-      <rect>
-       <x>40</x>
-       <y>310</y>
-       <width>81</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>Tw Cen MT</family>
-       <pointsize>-1</pointsize>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">background-color: rgb(115, 115, 115);
-    color: #1E2350;
-    border-radius: 10px;
-    font-size: 14px;
-    padding: 8px;</string>
-     </property>
-     <property name="text">
-      <string>Exportation</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="pushButton_15">
-     <property name="geometry">
-      <rect>
-       <x>410</x>
-       <y>310</y>
-       <width>81</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>Tw Cen MT</family>
-       <pointsize>-1</pointsize>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">background-color: rgb(115, 115, 115);
-    color: #1E2350;
-    border-radius: 10px;
-    font-size: 14px;
-    padding: 8px;</string>
-     </property>
-     <property name="text">
-      <string>Modifier</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="pushButton_16">
-     <property name="geometry">
-      <rect>
-       <x>520</x>
-       <y>310</y>
-       <width>81</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>Tw Cen MT</family>
-       <pointsize>-1</pointsize>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">background-color: rgb(115, 115, 115);
-    color: #1E2350;
-    border-radius: 10px;
-    font-size: 14px;
-    padding: 8px;</string>
-     </property>
-     <property name="text">
-      <string>Supprimer</string>
-     </property>
-    </widget>
     <widget class="QPushButton" name="b5">
      <property name="geometry">
       <rect>
-       <x>300</x>
+       <x>270</x>
        <y>30</y>
        <width>51</width>
        <height>31</height>
@@ -755,7 +885,7 @@ background-color: rgb(179, 179, 179);</string>
       <string/>
      </property>
      <property name="icon">
-      <iconset resource="icons.qrc">
+      <iconset resource="ressource.qrc">
        <normaloff>:/ressources/search-3-48.png</normaloff>:/ressources/search-3-48.png</iconset>
      </property>
     </widget>
@@ -785,11 +915,20 @@ background-color: rgb(179, 179, 179);</string>
      <property name="text">
       <string>Supprimer</string>
      </property>
+     <property name="icon">
+      <iconset theme="QIcon::ThemeIcon::EditDelete"/>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>13</width>
+       <height>13</height>
+      </size>
+     </property>
     </widget>
     <widget class="QPushButton" name="b3">
      <property name="geometry">
       <rect>
-       <x>390</x>
+       <x>360</x>
        <y>220</y>
        <width>91</width>
        <height>31</height>
@@ -812,7 +951,58 @@ background-color: rgb(179, 179, 179);</string>
      <property name="text">
       <string>Modifier</string>
      </property>
+     <property name="icon">
+      <iconset theme="QIcon::ThemeIcon::MailMessageNew"/>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>13</width>
+       <height>13</height>
+      </size>
+     </property>
     </widget>
+    <widget class="QPushButton" name="ASC">
+     <property name="geometry">
+      <rect>
+       <x>540</x>
+       <y>30</y>
+       <width>21</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset theme="QIcon::ThemeIcon::GoUp"/>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="DESC">
+     <property name="geometry">
+      <rect>
+       <x>570</x>
+       <y>30</y>
+       <width>21</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset theme="QIcon::ThemeIcon::GoDown"/>
+     </property>
+    </widget>
+    <zorder>recherche</zorder>
+    <zorder>label_8</zorder>
+    <zorder>tab1</zorder>
+    <zorder>label_11</zorder>
+    <zorder>tri</zorder>
+    <zorder>b5</zorder>
+    <zorder>b4</zorder>
+    <zorder>b3</zorder>
+    <zorder>DESC</zorder>
+    <zorder>ASC</zorder>
    </widget>
    <widget class="QWidget" name="verticalWidget" native="true">
     <property name="geometry">
@@ -873,7 +1063,7 @@ padding: 8px;</string>
       <string>Employee</string>
      </property>
      <property name="icon">
-      <iconset resource="icons.qrc">
+      <iconset resource="ressource.qrc">
        <normaloff>:/ressources/user-48.png</normaloff>:/ressources/user-48.png</iconset>
      </property>
     </widget>
@@ -904,7 +1094,7 @@ padding: 8px;</string>
       <string>Equipement</string>
      </property>
      <property name="icon">
-      <iconset resource="icons.qrc">
+      <iconset resource="ressource.qrc">
        <normaloff>:/ressources/tool-box-48.png</normaloff>:/ressources/tool-box-48.png</iconset>
      </property>
     </widget>
@@ -934,7 +1124,7 @@ padding: 8px;</string>
       <string>Examen</string>
      </property>
      <property name="icon">
-      <iconset resource="icons.qrc">
+      <iconset resource="ressource.qrc">
        <normaloff>:/ressources/paper-48.png</normaloff>:/ressources/paper-48.png</iconset>
      </property>
     </widget>
@@ -965,7 +1155,7 @@ background-color: rgb(175, 175, 175);</string>
       <string>Institut</string>
      </property>
      <property name="icon">
-      <iconset resource="icons.qrc">
+      <iconset resource="ressource.qrc">
        <normaloff>:/ressources/building-48.png</normaloff>:/ressources/building-48.png</iconset>
      </property>
     </widget>
@@ -995,7 +1185,7 @@ background-color: rgb(175, 175, 175);</string>
       <string>Livreur</string>
      </property>
      <property name="icon">
-      <iconset resource="icons.qrc">
+      <iconset resource="ressource.qrc">
        <normaloff>:/ressources/delivery-48.png</normaloff>:/ressources/delivery-48.png</iconset>
      </property>
     </widget>
@@ -1025,7 +1215,7 @@ background-color: rgb(175, 175, 175);</string>
       <string>Box</string>
      </property>
      <property name="icon">
-      <iconset resource="icons.qrc">
+      <iconset resource="ressource.qrc">
        <normaloff>:/ressources/box-3-48.png</normaloff>:/ressources/box-3-48.png</iconset>
      </property>
     </widget>
@@ -1055,7 +1245,7 @@ background-color: rgb(175, 175, 175);</string>
       <string>Parammetre</string>
      </property>
      <property name="icon">
-      <iconset resource="icons.qrc">
+      <iconset resource="ressource.qrc">
        <normaloff>:/ressources/settings-5-48.png</normaloff>:/ressources/settings-5-48.png</iconset>
      </property>
     </widget>
@@ -1085,7 +1275,7 @@ background-color: rgb(175, 175, 175);</string>
       <string>Quitter</string>
      </property>
      <property name="icon">
-      <iconset resource="icons.qrc">
+      <iconset resource="ressource.qrc">
        <normaloff>:/ressources/logout-48.png</normaloff>:/ressources/logout-48.png</iconset>
      </property>
     </widget>
@@ -1104,7 +1294,7 @@ background-color: rgb(175, 175, 175);</string>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources>
-  <include location="icons.qrc"/>
+  <include location="ressource.qrc"/>
  </resources>
  <connections/>
 </ui>

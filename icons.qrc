@@ -13,5 +13,6 @@
         <file>ressources/search-3-48.png</file>
         <file>ressources/settings-5-48.png</file>
         <file>ressources/logout-48.png</file>
+        <file>ressources/map.png</file>
     </qresource>
 </RCC>
