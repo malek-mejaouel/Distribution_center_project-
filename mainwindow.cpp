@@ -2,25 +2,54 @@
 #include "ui_mainwindow.h"
 #include "connection.h"
 #include "box.h"
-
+#include "statisticsdialog.h" // Include the new dialog header
+#include "qrdialog.h"
+#include "trackdialog.h"
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QSqlQueryModel>
 #include <QMessageBox>
 #include <QTableWidgetItem>
 #include <QDebug>
+#include <QPrinter>
+#include <QFileDialog>
+#include <QTextDocument>
+#include <QVBoxLayout>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    // Keep form & table in sync
     connect(ui->tableWidget, &QTableWidget::itemSelectionChanged,
             this, &MainWindow::on_tableWidget_itemSelectionChanged);
+
+    // QR, PDF, sort buttons, stats…
+    connect(ui->qrButton, &QPushButton::clicked,
+            this, &MainWindow::on_qrButton_clicked);
+    connect(ui->pdfButton, &QPushButton::clicked,
+            this, &MainWindow::on_pdfButton_clicked);
+    connect(ui->asc, &QPushButton::clicked,
+            this, &MainWindow::on_asc_clicked);
+    connect(ui->desc, &QPushButton::clicked,
+            this, &MainWindow::on_desc_clicked);
+    connect(ui->statisticsButton, &QPushButton::clicked,
+            this, &MainWindow::on_statisticsButton_clicked);
+
+    // Track button: open dialog, refresh table on deliveryDone()
+    connect(ui->pushButtonTrack, &QPushButton::clicked, this, [&]() {
+        TrackDialog dlg(this);
+        connect(&dlg, &TrackDialog::deliveryDone, this, [this]() {
+            refreshTable();
+        });
+        dlg.exec();
+    });
+
     setupComboBoxes();
     refreshTable();
 }
-
 MainWindow::~MainWindow()
 {
     delete ui;
@@ -82,9 +111,22 @@ void MainWindow::setupComboBoxes()
     ui->statusComboBox->addItem("ouvert");
     ui->statusComboBox->addItem("non-arriver");
     ui->statusComboBox->setCurrentIndex(0);
-}
 
-void MainWindow::refreshTable(const QString &search)
+    // Sort ComboBox
+    ui->sortComboBox->clear();
+    ui->sortComboBox->addItem("ID_BOX");
+    ui->sortComboBox->addItem("STATUS");
+    ui->sortComboBox->addItem("ETAT");
+}
+void MainWindow::on_qrButton_clicked()
+{
+
+    // Create and show the QR dialog
+    QRDialog *qrDialog = new QRDialog(this);
+    qrDialog->setAttribute(Qt::WA_DeleteOnClose); // Auto-delete when closed
+    qrDialog->exec();
+}
+void MainWindow::refreshTable(const QString &search, const QString &sortColumn, Qt::SortOrder order)
 {
     QSqlQueryModel* model = Box::afficher(search);
     ui->tableWidget->clearContents();
@@ -105,6 +147,26 @@ void MainWindow::refreshTable(const QString &search)
             ui->tableWidget->setItem(r, c, item);
         }
     }
+
+    // Sort the table based on the selected column and order
+    if (!sortColumn.isEmpty()) {
+        int columnIndex = -1;
+
+        if (sortColumn == "ID_BOX") {
+            columnIndex = 0;
+        } else if (sortColumn == "STATUS") {
+            columnIndex = 6;
+        } else if (sortColumn == "ETAT") {
+            columnIndex = 7;
+        }
+
+        if (columnIndex != -1) {
+            ui->tableWidget->sortItems(columnIndex, order);
+        } else {
+            QMessageBox::warning(this, "Error", "Invalid column name for sorting.");
+        }
+    }
+
     ui->tableWidget->resizeColumnsToContents();
     delete model;
 }
@@ -241,4 +303,113 @@ void MainWindow::on_annuler_clicked()
 void MainWindow::on_searchLineEdit_textChanged(const QString &text)
 {
     refreshTable(text);
+}
+
+void MainWindow::on_pdfButton_clicked()
+{
+    exportToPDF();
+}
+
+void MainWindow::on_asc_clicked()
+{
+    QString sortColumn = ui->sortComboBox->currentText();
+    refreshTable("", sortColumn, Qt::AscendingOrder);
+}
+
+void MainWindow::on_desc_clicked()
+{
+    QString sortColumn = ui->sortComboBox->currentText();
+    refreshTable("", sortColumn, Qt::DescendingOrder);
+}
+
+void MainWindow::on_statisticsButton_clicked()
+{
+    StatisticsDialog dialog(this);
+    dialog.exec();
+}
+
+void MainWindow::exportToPDF() {
+    QString fileName = QFileDialog::getSaveFileName(this, "Export to PDF", "", "PDF Files (*.pdf)");
+    if (fileName.isEmpty()) return;
+
+    QPrinter printer(QPrinter::HighResolution);
+    printer.setOutputFormat(QPrinter::PdfFormat);
+    printer.setOutputFileName(fileName);
+
+    QTextDocument document;
+    QString htmlContent;
+
+    htmlContent += R"(
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Box Information</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 20px;
+                background-color: #f4f4f9;
+            }
+            h1 {
+                color: #333;
+                text-align: center;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+            }
+            th, td {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: left;
+            }
+            th {
+                background-color: #4CAF50;
+                color: white;
+            }
+            tr:nth-child(even) {
+                background-color: #f2f2f2;
+            }
+            tr:hover {
+                background-color: #ddd;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Box Information Report</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID_Box</th>
+                    <th>Examen</th>
+                    <th>Date_Creation</th>
+                    <th>Livreur</th>
+                    <th>Destination</th>
+                    <th>Status</th>
+                    <th>Etat</th>
+                </tr>
+            </thead>
+            <tbody>)";
+
+    for (int row = 0; row < ui->tableWidget->rowCount(); ++row) {
+        htmlContent += "<tr>";
+        for (int col = 0; col < ui->tableWidget->columnCount(); ++col) {
+            htmlContent += "<td>" + ui->tableWidget->item(row, col)->text() + "</td>";
+        }
+        htmlContent += "</tr>";
+    }
+
+    // Close the HTML tags
+    htmlContent += R"(
+            </tbody>
+        </table>
+    </body>
+    </html>)";
+
+    document.setHtml(htmlContent);
+    document.print(&printer);
+
+    QMessageBox::information(this, "Export PDF", "PDF file generated successfully!");
 }

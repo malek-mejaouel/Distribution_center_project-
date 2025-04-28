@@ -327,7 +327,23 @@ background-color:#ffffff ;
       <string notr="true">color: rgb(0, 0, 0);
  font-size: 13px;
     font-weight: bold;
-    font-family: &quot;Poppins&quot;;</string>
+    font-family: &quot;Poppins&quot;;
+QPushButton {
+    background-color: #007BFF;
+    color: white;
+    border: 2px solid #0056b3;
+    border-radius: 5px;
+    padding: 8px;
+}
+
+QPushButton:hover {
+    background-color: #0056b3;
+    border: 2px solid #003580;
+}
+
+QPushButton:pressed {
+    background-color: #003580;
+}</string>
      </property>
      <property name="text">
       <string>Recherche de Box par ID : </string>
@@ -385,7 +401,7 @@ background-color: rgb(179, 179, 179);</string>
      </column>
      <column>
       <property name="text">
-       <string>Date_Création</string>
+       <string>Livreur</string>
       </property>
       <property name="background">
        <color>
@@ -397,7 +413,7 @@ background-color: rgb(179, 179, 179);</string>
      </column>
      <column>
       <property name="text">
-       <string>Livreur</string>
+       <string>Date_Création</string>
       </property>
       <property name="background">
        <color>
@@ -447,7 +463,7 @@ background-color: rgb(179, 179, 179);</string>
     <widget class="QLabel" name="label_11">
      <property name="geometry">
       <rect>
-       <x>390</x>
+       <x>380</x>
        <y>30</y>
        <width>71</width>
        <height>21</height>
@@ -466,23 +482,31 @@ background-color: rgb(179, 179, 179);</string>
     <widget class="QComboBox" name="sortComboBox">
      <property name="geometry">
       <rect>
-       <x>470</x>
+       <x>450</x>
        <y>30</y>
-       <width>91</width>
+       <width>71</width>
        <height>24</height>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color : blue;color:white;</string>
+      <string notr="true"> background-color: #007BFF;
+    color: white;
+    border: 2px solid #0056b3;
+    padding: 5px;</string>
      </property>
      <item>
       <property name="text">
-       <string>Status</string>
+       <string>ID_BOX</string>
       </property>
      </item>
      <item>
       <property name="text">
        <string>Etat</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Status</string>
       </property>
      </item>
     </widget>
@@ -584,8 +608,52 @@ background-color: rgb(179, 179, 179);</string>
        <normaloff>:/ressources/search-3-48.png</normaloff>:/ressources/search-3-48.png</iconset>
      </property>
     </widget>
+    <widget class="QPushButton" name="asc">
+     <property name="geometry">
+      <rect>
+       <x>530</x>
+       <y>30</y>
+       <width>31</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true"> background-color: #007BFF;
+    color: white;
+    border: 2px solid #0056b3;
+    padding: 5px;</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset theme="QIcon::ThemeIcon::GoUp"/>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="desc">
+     <property name="geometry">
+      <rect>
+       <x>570</x>
+       <y>30</y>
+       <width>31</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true"> background-color: #007BFF;
+    color: white;
+    border: 2px solid #0056b3;
+    padding: 5px;</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset theme="QIcon::ThemeIcon::GoDown"/>
+     </property>
+    </widget>
    </widget>
-   <widget class="QTabWidget" name="tab">
+   <widget class="QTabWidget" name="TabWidget">
     <property name="geometry">
      <rect>
       <x>200</x>
@@ -603,6 +671,18 @@ QTabWidget::pane {
 }
 
 /* Style for the Tab Bar (tab headers) */
+QPushButton {
+    background-color: #007BFF;
+    color: white;
+    border: 1px solid #0056b3;
+    padding: 5px;
+}
+
+/* Hover state */
+QPushButton:hover {
+    background-color: #0056b3; /* Darker shade for hover */
+    border: 1px solid #003580; /* Ensure border remains visible */
+}
 QTabBar::tab {
     background: #8685F5; /* Default tab background */
     color: white; /* Text color */
@@ -632,7 +712,7 @@ QTabBar::tab:disabled {
 </string>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="widget">
      <attribute name="title">
@@ -883,6 +963,86 @@ QTabBar::tab:disabled {
      <attribute name="title">
       <string>Fonctionalités</string>
      </attribute>
+     <widget class="QWidget" name="verticalLayoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>-1</x>
+        <y>-1</y>
+        <width>601</width>
+        <height>251</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="QWidget" name="chartContainer" native="true">
+         <widget class="QPushButton" name="pdfButton">
+          <property name="geometry">
+           <rect>
+            <x>450</x>
+            <y>30</y>
+            <width>80</width>
+            <height>24</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color:blue;color:white;</string>
+          </property>
+          <property name="text">
+           <string>pdf</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="statisticsButton">
+          <property name="geometry">
+           <rect>
+            <x>450</x>
+            <y>70</y>
+            <width>80</width>
+            <height>24</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color:blue;color:white;</string>
+          </property>
+          <property name="text">
+           <string>STATS</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="qrButton">
+          <property name="geometry">
+           <rect>
+            <x>450</x>
+            <y>110</y>
+            <width>80</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color:blue;color:white;</string>
+          </property>
+          <property name="text">
+           <string>generate QR</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="pushButtonTrack">
+          <property name="geometry">
+           <rect>
+            <x>450</x>
+            <y>160</y>
+            <width>80</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color:blue;color:white;</string>
+          </property>
+          <property name="text">
+           <string>Track</string>
+          </property>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </widget>
   </widget>
