@@ -1,26 +1,81 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QMessageBox>
-#include <QSqlQuery>
 #include <QSqlError>
-#include <QString>
 #include <QRegularExpression>
-#include <QTimer>
+#include <QDialog>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QPushButton>
+#include <QTableView>
+#include <QTextEdit>
+#include <QDateTime>
+#include <QFile>
+#include <QTextStream>
+#include <QtCharts/QPieSeries>
+#include <QtCharts/QPieSlice>
+#include <QtCharts/QBarSeries>
+#include <QtCharts/QBarSet>
+#include <QtCharts/QChart>
+#include <QtCharts/QChartView>
+#include <QtCharts/QBarCategoryAxis>
+#include <QtCharts/QValueAxis>
+#include <QPrinter> // Ajout de l'inclusion pour QPrinter
+#include <QSerialPort>
+#include <QSerialPortInfo>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    selectedLivreurId(-1),
+    currentOrder("ASC")
+
+
+
 {
     ui->setupUi(this);
+    int test = A.connect_arduino(); // A est ton objet ArduinoConnection (je suppose)
 
-    // Initialisation du tableau pour afficher les livreurs
+    if (test == 0) {
+        QMessageBox::information(this, "Connexion", "Connexion Arduino réussie sur port COM5.");
+
+        // Si connexion OK, tu récupères directement le QSerialPort
+        serial = A.getserial(); // Tu récupères l'objet connecté
+
+        qDebug() << "Port série connecté avec succès.";
+    }
+    else {
+        QMessageBox::critical(this, "Erreur", "Échec de la connexion Arduino sur port COM5.");
+    }
+
+
+
+
+    QSqlQueryModel *defaultModel = currentLivreur.trier("IDLIVREUR", "ASC");
+    updateTableWithModel(defaultModel);
+    loadTableData();
+    Historique::synchroniserHistorique();
     setupTable();
-    loadTableData(); // Charger les données existantes
 
-    // Utilisation d'un timer pour rafraîchir la liste périodiquement (toutes les 5 secondes)
-    QTimer *timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, this, &MainWindow::loadTableData);
-    timer->start(5000);  // Rafraîchissement automatique
+    ui->trie->clear();
+    ui->trie->addItem("ID ", 0);
+    ui->trie->addItem("Nom ", 1);
+    ui->trie->addItem("Prénom ", 2);
+    ui->trie->addItem("CIN ", 3);
+    ui->trie->addItem("Téléphone ", 4);
+    ui->trie->addItem("Véhicule ", 5);
+    ui->trie->addItem("Nbr Max Box ", 6);
+    ui->trie->addItem("État ", 7);
+    ui->trie->addItem("Email ", 8);
+
+    connect(ui->rech, &QLineEdit::textChanged, this, &MainWindow::onRechTextChanged);
+    connect(ui->trie, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &MainWindow::onTriComboBoxChanged);
+    connect(ui->imageButton, &QPushButton::clicked, this, &MainWindow::on_imageButton_clicked);
+    connect(ui->AscButton, &QPushButton::clicked, this, &MainWindow::onAscButtonClicked);
+    connect(ui->DescButton, &QPushButton::clicked, this, &MainWindow::onDescButtonClicked);
+    // Connexion du signal de réception série
+    connect(serial, &QSerialPort::readyRead, this, &MainWindow::on_serialDataReceived);
+
 }
 
 MainWindow::~MainWindow()
@@ -28,125 +83,298 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-// **Méthode pour configurer le tableau tab1**
 void MainWindow::setupTable()
 {
-    ui->tab1->setColumnCount(9); // Ajout d'une colonne pour ID Livre
-    ui->tab1->setHorizontalHeaderLabels({"ID", "CIN", "Nom", "Prénom", "Téléphone", "Véhicule", "Nbr Max Box", "État", "Email"});
+    ui->tab1->setColumnCount(10);
+    ui->tab1->setHorizontalHeaderLabels({"ID", "CIN", "Nom", "Prénom", "Téléphone", "Véhicule", "Nbr Max Box", "État", "Email", "Image"});
     ui->tab1->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-
-    // Connecter le signal de sélection de ligne pour modifier ou supprimer
     connect(ui->tab1, &QTableWidget::cellClicked, this, &MainWindow::onTableRowClicked);
 }
 
-// **Méthode pour charger les données dans tab1**
-void MainWindow::loadTableData()
+void MainWindow::updateTableWithModel(QSqlQueryModel *model)
 {
-    QSqlQuery query("SELECT IDLIVREUR, CINLIVREUR, NOMLIVREUR, PRENOMLIVREUR, "
-                    "TELEPHONELIVREUR, VEHICULELIVREUR, NBRMAXBOX, ETATLIVREUR, EMAILLIVREUR FROM LIVREURES");
-
-    ui->tab1->setRowCount(0); // Réinitialisation du tableau avant d'ajouter les nouvelles lignes
-    int row = 0;
-
-    while (query.next()) {
+    ui->tab1->setRowCount(0);
+    for (int row = 0; row < model->rowCount(); ++row) {
         ui->tab1->insertRow(row);
-        ui->tab1->setItem(row, 0, new QTableWidgetItem(query.value(0).toString())); // ID Livre
-        ui->tab1->setItem(row, 1, new QTableWidgetItem(query.value(1).toString())); // CIN
-        ui->tab1->setItem(row, 2, new QTableWidgetItem(query.value(2).toString())); // Nom
-        ui->tab1->setItem(row, 3, new QTableWidgetItem(query.value(3).toString())); // Prénom
-        ui->tab1->setItem(row, 4, new QTableWidgetItem(query.value(4).toString())); // Téléphone
-        ui->tab1->setItem(row, 5, new QTableWidgetItem(query.value(5).toString())); // Véhicule
-        ui->tab1->setItem(row, 6, new QTableWidgetItem(query.value(6).toString())); // Nombre max box
-        ui->tab1->setItem(row, 7, new QTableWidgetItem(query.value(7).toString())); // État
-        ui->tab1->setItem(row, 8, new QTableWidgetItem(query.value(8).toString())); // Email
-
-        row++;
+        for (int column = 0; column < model->columnCount(); ++column) {
+            QModelIndex index = model->index(row, column);
+            QTableWidgetItem *item = new QTableWidgetItem(model->data(index).toString());
+            ui->tab1->setItem(row, column, item);
+        }
     }
 }
 
-// **Ajout d'un livreur à la base de données**
-void MainWindow::on_b1_clicked()
+void MainWindow::loadTableData()
 {
-    // Récupérer les données du formulaire
-    QString cinLivreur = ui->cin->text();
+    Livreur Livreur;
+    QSqlQueryModel* model = Livreur.afficher();
+    ui->tab1->clearContents();
+    ui->tab1->setRowCount(0);
+
+    int row = 0;
+    while (model->canFetchMore()) {
+        model->fetchMore();
+    }
+    for (int i = 0; i < model->rowCount(); ++i) {
+        ui->tab1->insertRow(row);
+        for (int col = 0; col < model->columnCount(); col++) {
+            ui->tab1->setItem(row, col, new QTableWidgetItem(model->data(model->index(i, col)).toString()));
+        }
+        row++;
+    }
+
+    ui->tab1->resizeColumnsToContents();
+}
+
+void MainWindow::updateTableData()
+{
+    loadTableData();
+}
+
+void MainWindow::onRechTextChanged(const QString &text) {
+    if (text.isEmpty()) {
+        loadTableData();
+    } else {
+        QSqlQueryModel *model = currentLivreur.rechercherParAttribut("NOMLIVREUR", text);
+        updateTableWithModel(model);
+    }
+}
+
+void MainWindow::on_valider_clicked()
+{
+    int cinLivreur = ui->cin->text().toInt();
     QString nomLivreur = ui->nom->text();
     QString prenomLivreur = ui->prenom->text();
-    QString telephoneStr = ui->tel->text();
+    int telephoneLivreur = ui->tel->text().toInt();
     QString vehiculeLivreur = ui->vehicule->text();
-    QString nbrMaxBoxStr = ui->nb->text();
+    int nbrMaxBox = ui->nb->text().toInt();
     QString emailLivreur = ui->email->text();
+    QString imagePath = ui->imagePath->text();
 
-    // Expressions régulières pour la validation des entrées
-    QRegularExpression cinRegex("^[0-9]{8}$");
-    QRegularExpression nomPrenomRegex("^[A-Za-zÀ-ÿ]+$");
-    QRegularExpression telRegex("^[0-9]{8}$");
-    QRegularExpression emailRegex("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
-
-    if (!cinRegex.match(cinLivreur).hasMatch()) {
+    if (!currentLivreur.validerCin(cinLivreur)) {
         QMessageBox::warning(this, "Erreur", "CIN invalide ! Il doit contenir exactement 8 chiffres.");
         return;
     }
-    if (!nomPrenomRegex.match(nomLivreur).hasMatch() || !nomPrenomRegex.match(prenomLivreur).hasMatch()) {
+    if (!currentLivreur.validerNomPrenom(nomLivreur) || !currentLivreur.validerNomPrenom(prenomLivreur)) {
         QMessageBox::warning(this, "Erreur", "Le nom et le prénom doivent contenir uniquement des lettres.");
         return;
     }
-    if (!telRegex.match(telephoneStr).hasMatch()) {
-        QMessageBox::warning(this, "Erreur", "Numéro de téléphone invalide !");
+    if (!currentLivreur.validerTelephone(telephoneLivreur)) {
+        QMessageBox::warning(this, "Erreur", "Numéro de téléphone invalide ! Il doit contenir exactement 8 chiffres.");
         return;
     }
-    if (!emailRegex.match(emailLivreur).hasMatch()) {
+    if (!currentLivreur.validerEmail(emailLivreur)) {
         QMessageBox::warning(this, "Erreur", "Adresse email invalide !");
         return;
     }
-
-    QString etatLivreur;
-    if (ui->libre->isChecked()) {
-        etatLivreur = "Libre";
-    } else if (ui->non->isChecked()) {
-        etatLivreur = "Non";
-    } else {
-        QMessageBox::warning(this, "Erreur", "Veuillez sélectionner l'état du livreur !");
+    if (!currentLivreur.validerVehicule(vehiculeLivreur)) {
+        QMessageBox::warning(this, "Erreur", "Le champ véhicule ne peut pas être vide.");
         return;
     }
-
-    bool boxOk;
-    int nbrMaxBox = nbrMaxBoxStr.toInt(&boxOk);
-    if (!boxOk || nbrMaxBox <= 0) {
+    if (!currentLivreur.validerNbrMaxBox(nbrMaxBox)) {
         QMessageBox::warning(this, "Erreur", "Nombre maximal de box invalide !");
         return;
     }
 
-    if (cinLivreur.isEmpty() || nomLivreur.isEmpty() || prenomLivreur.isEmpty() || vehiculeLivreur.isEmpty() || emailLivreur.isEmpty()) {
-        QMessageBox::warning(this, "Erreur", "Veuillez remplir tous les champs !");
+    // Vérification si le chemin de l'image existe déjà dans la base de données
+    QSqlQuery query;
+    query.prepare("SELECT COUNT(*) FROM LIVREURES WHERE IMAGEPATH = :imagePath");
+    query.bindValue(":imagePath", imagePath);
+    query.exec();
+    if (query.next() && query.value(0).toInt() > 0) {
+        QMessageBox::warning(this, "Erreur", "Le chemin de l'image existe déjà .");
         return;
     }
 
-    // Requête d'insertion
-    QSqlQuery query;
-    query.prepare("INSERT INTO LIVREURES (CINLIVREUR, NOMLIVREUR, PRENOMLIVREUR, TELEPHONELIVREUR, "
-                  "VEHICULELIVREUR, NBRMAXBOX, ETATLIVREUR, EMAILLIVREUR) "
-                  "VALUES (:cinLivreur, :nomLivreur, :prenomLivreur, :telephone, "
-                  ":vehiculeLivreur, :nbrMaxBox, :etatLivreur, :emailLivreur)");
+    // Vérification si le chemin de l'image existe
+    if (!QFile::exists(imagePath)) {
+        QMessageBox::warning(this, "Erreur", "Le chemin de l'image n'existe pas.");
+        return;
+    }
 
-    query.bindValue(":cinLivreur", cinLivreur);
-    query.bindValue(":nomLivreur", nomLivreur);
-    query.bindValue(":prenomLivreur", prenomLivreur);
-    query.bindValue(":telephone", telephoneStr.toInt());
-    query.bindValue(":vehiculeLivreur", vehiculeLivreur);
-    query.bindValue(":nbrMaxBox", nbrMaxBox);
-    query.bindValue(":etatLivreur", etatLivreur);
-    query.bindValue(":emailLivreur", emailLivreur);
+    QString etatLivreur = ui->libre->isChecked() ? "Libre" : "Non";
 
-    if (query.exec()) {
+    currentLivreur.setCin(cinLivreur);
+    currentLivreur.setNom(nomLivreur);
+    currentLivreur.setPrenom(prenomLivreur);
+    currentLivreur.setTelephone(telephoneLivreur);
+    currentLivreur.setVehicule(vehiculeLivreur);
+    currentLivreur.setNbrMaxBox(nbrMaxBox);
+    currentLivreur.setEmail(emailLivreur);
+    currentLivreur.setEtat(etatLivreur);
+    currentLivreur.setImagePath(imagePath);
+
+    bool success = currentLivreur.ajouter();
+    if (success) {
         QMessageBox::information(this, "Succès", "Livreur ajouté avec succès !");
-        loadTableData(); // Mettre à jour la table immédiatement après l'ajout
+        loadTableData();
+        clearInputFields();
     } else {
-        QMessageBox::critical(this, "Erreur", "Erreur d'ajout : " + query.lastError().text());
+        QMessageBox::critical(this, "Erreur", "Erreur d'ajout : Impossible d'ajouter le livreur.");
     }
 }
 
-// **Réinitialisation des champs**
-void MainWindow::on_b2_clicked()
+void MainWindow::on_annuler_clicked()
+{
+    clearInputFields();
+}
+
+void MainWindow::on_modifier_clicked()
+{
+    if (selectedLivreurId == -1) {
+        QMessageBox::warning(this, "Erreur", "Veuillez sélectionner un livreur à modifier !");
+        return;
+    }
+
+    int cinLivreur = ui->cin->text().toInt();
+    QString nomLivreur = ui->nom->text();
+    QString prenomLivreur = ui->prenom->text();
+    int telephoneLivreur = ui->tel->text().toInt();
+    QString vehiculeLivreur = ui->vehicule->text();
+    int nbrMaxBox = ui->nb->text().toInt();
+    QString emailLivreur = ui->email->text();
+    QString imagePath = ui->imagePath->text();
+
+    if (!currentLivreur.validerCin(cinLivreur)) {
+        QMessageBox::warning(this, "Erreur", "CIN invalide ! Il doit contenir exactement 8 chiffres.");
+        return;
+    }
+    if (!currentLivreur.validerNomPrenom(nomLivreur) || !currentLivreur.validerNomPrenom(prenomLivreur)) {
+        QMessageBox::warning(this, "Erreur", "Le nom et le prénom doivent contenir uniquement des lettres.");
+        return;
+    }
+    if (!currentLivreur.validerTelephone(telephoneLivreur)) {
+        QMessageBox::warning(this, "Erreur", "Numéro de téléphone invalide ! Il doit contenir exactement 8 chiffres.");
+        return;
+    }
+    if (!currentLivreur.validerEmail(emailLivreur)) {
+        QMessageBox::warning(this, "Erreur", "Adresse email invalide !");
+        return;
+    }
+    if (!currentLivreur.validerVehicule(vehiculeLivreur)) {
+        QMessageBox::warning(this, "Erreur", "Le champ véhicule ne peut pas être vide.");
+        return;
+    }
+    if (!currentLivreur.validerNbrMaxBox(nbrMaxBox)) {
+        QMessageBox::warning(this, "Erreur", "Nombre maximal de box invalide !");
+        return;
+    }
+
+    // Vérification si le chemin de l'image existe
+    if (!QFile::exists(imagePath)) {
+        QMessageBox::warning(this, "Erreur", "Le chemin de l'image n'existe pas.");
+        return;
+    }
+
+    QString etatLivreur = ui->libre->isChecked() ? "Libre" : "Non";
+
+    currentLivreur.setId(selectedLivreurId);
+    currentLivreur.setCin(cinLivreur);
+    currentLivreur.setNom(nomLivreur);
+    currentLivreur.setPrenom(prenomLivreur);
+    currentLivreur.setTelephone(telephoneLivreur);
+    currentLivreur.setVehicule(vehiculeLivreur);
+    currentLivreur.setNbrMaxBox(nbrMaxBox);
+    currentLivreur.setEmail(emailLivreur);
+    currentLivreur.setEtat(etatLivreur);
+    currentLivreur.setImagePath(imagePath);
+
+    bool success = currentLivreur.modifier();
+    if (success) {
+        QMessageBox::information(this, "Succès", "Livreur modifié avec succès !");
+        loadTableData();
+    } else {
+        QMessageBox::critical(this, "Erreur", "Erreur de modification : Impossible de modifier le livreur.");
+    }
+}
+
+void MainWindow::on_supprimer_clicked()
+{
+    if (selectedLivreurId == -1) {
+        QMessageBox::warning(this, "Erreur", "Veuillez sélectionner un livreur à supprimer !");
+        return;
+    }
+
+    QMessageBox::StandardButton reply = QMessageBox::question(
+        this,
+        "Confirmation",
+        "Êtes-vous sûr de vouloir supprimer ce livreur ?",
+        QMessageBox::Yes | QMessageBox::No
+        );
+
+    if (reply == QMessageBox::Yes) {
+        bool success = currentLivreur.supprimer(selectedLivreurId);
+        if (success) {
+            QMessageBox::information(this, "Succès", "Livreur supprimé avec succès !");
+            loadTableData();
+            clearInputFields();
+        } else {
+            QMessageBox::critical(this, "Erreur", "Erreur de suppression : Impossible de supprimer le livreur.");
+        }
+    }
+}
+
+void MainWindow::onTableRowClicked(int row, int)
+{
+    selectedLivreurId = ui->tab1->item(row, 0)->text().toInt();
+
+    ui->cin->setText(ui->tab1->item(row, 1)->text());
+    ui->nom->setText(ui->tab1->item(row, 2)->text());
+    ui->prenom->setText(ui->tab1->item(row, 3)->text());
+    ui->tel->setText(ui->tab1->item(row, 4)->text());
+    ui->vehicule->setText(ui->tab1->item(row, 5)->text());
+    ui->nb->setValue(ui->tab1->item(row, 6)->text().toInt());
+    ui->email->setText(ui->tab1->item(row, 8)->text());
+    ui->imagePath->setText(ui->tab1->item(row, 9)->text());
+
+    QString etat = ui->tab1->item(row, 7)->text();
+    ui->libre->setChecked(etat == "Libre");
+    ui->non->setChecked(etat != "Libre");
+}
+
+void MainWindow::on_recherche_clicked()
+{
+    QString name = ui->rech->text();
+    if (name.isEmpty()) {
+        loadTableData();
+        return;
+    }
+
+    QSqlQueryModel *model = currentLivreur.rechercherParAttribut("NOMLIVREUR", name);
+    updateTableWithModel(model);
+}
+
+void MainWindow::onAscButtonClicked() {
+    currentOrder = "ASC";
+    onTriComboBoxChanged(ui->trie->currentIndex());
+}
+
+void MainWindow::onDescButtonClicked() {
+    currentOrder = "DESC";
+    onTriComboBoxChanged(ui->trie->currentIndex());
+}
+
+void MainWindow::onTriComboBoxChanged(int index) {
+    QString critere;
+
+    switch (index) {
+    case 0: critere = "IDLIVREUR"; break;
+    case 1: critere = "NOMLIVREUR"; break;
+    case 2: critere = "PRENOMLIVREUR"; break;
+    case 3: critere = "CINLIVREUR"; break;
+    case 4: critere = "TELEPHONELIVREUR"; break;
+    case 5: critere = "VEHICULELIVREUR"; break;
+    case 6: critere = "NBRMAXBOX"; break;
+    case 7: critere = "ETATLIVREUR"; break;
+    case 8: critere = "EMAILLIVREUR"; break;
+    default: critere = "IDLIVREUR"; break;
+    }
+
+    QSqlQueryModel *model = currentLivreur.trier(critere, currentOrder);
+    updateTableWithModel(model);
+}
+
+void MainWindow::clearInputFields()
 {
     ui->cin->clear();
     ui->nom->clear();
@@ -155,146 +383,415 @@ void MainWindow::on_b2_clicked()
     ui->vehicule->clear();
     ui->nb->clear();
     ui->email->clear();
+    ui->imagePath->clear();
     ui->libre->setChecked(false);
     ui->non->setChecked(false);
+    selectedLivreurId = -1;
 }
 
-// **Méthode pour modifier un livreur dans la base de données**
-void MainWindow::on_b3_clicked()
+void MainWindow::showStatistics()
 {
-    if (selectedLivreurId.isEmpty()) {
-        QMessageBox::warning(this, "Erreur", "Veuillez sélectionner un livreur à modifier !");
-        return;
-    }
+    QDialog *statsDialog = new QDialog(this);
+    statsDialog->setWindowTitle("📊 Tableau de Bord des Livreurs");
+    statsDialog->resize(800, 300);
 
-    // Récupérer les valeurs des champs
-    QString cinLivreur = ui->cin->text();
-    QString nomLivreur = ui->nom->text();
-    QString prenomLivreur = ui->prenom->text();
-    QString telephoneStr = ui->tel->text();
-    QString vehiculeLivreur = ui->vehicule->text();
-    QString nbrMaxBoxStr = ui->nb->text();
-    QString emailLivreur = ui->email->text();
+    QVBoxLayout *mainLayout = new QVBoxLayout(statsDialog);
 
-    // Expressions régulières pour la validation des entrées
-    QRegularExpression cinRegex("^[0-9]{8}$");
-    QRegularExpression nomPrenomRegex("^[A-Za-zÀ-ÿ]+$");
-    QRegularExpression telRegex("^[0-9]{8}$");
-    QRegularExpression emailRegex("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
+    QFont titleFont;
+    titleFont.setBold(true);
+    titleFont.setPointSize(16);
 
-    if (!cinRegex.match(cinLivreur).hasMatch()) {
-        QMessageBox::warning(this, "Erreur", "CIN invalide ! Il doit contenir exactement 8 chiffres.");
-        return;
-    }
-    if (!nomPrenomRegex.match(nomLivreur).hasMatch() || !nomPrenomRegex.match(prenomLivreur).hasMatch()) {
-        QMessageBox::warning(this, "Erreur", "Le nom et le prénom doivent contenir uniquement des lettres.");
-        return;
-    }
-    if (!telRegex.match(telephoneStr).hasMatch()) {
-        QMessageBox::warning(this, "Erreur", "Numéro de téléphone invalide !");
-        return;
-    }
-    if (!emailRegex.match(emailLivreur).hasMatch()) {
-        QMessageBox::warning(this, "Erreur", "Adresse email invalide !");
-        return;
-    }
+    auto createStyledGroupBox = [](const QString &title) {
+        QGroupBox *box = new QGroupBox(title);
+        box->setStyleSheet(R"(
+            QGroupBox {
+                font-weight: bold;
+                font-size: 17px;
+                color: #2C3E50;
+                border: 2px solid #3498DB;
+                border-radius: 20px;
+                margin-top: 20px;
+                background-color: #F9F9F9;
+                padding: 20px;
+            }
+            QGroupBox::title {
+                subcontrol-origin: margin;
+                subcontrol-position: top center;
+                padding: 10px;
+                font-size: 18px;
+                color: #1A5276;
+            })");
+        return box;
+    };
 
-    QString etatLivreur;
-    if (ui->libre->isChecked()) {
-        etatLivreur = "Libre";
-    } else if (ui->non->isChecked()) {
-        etatLivreur = "Non";
-    } else {
-        QMessageBox::warning(this, "Erreur", "Veuillez sélectionner l'état du livreur !");
-        return;
-    }
+    QSqlQuery countQuery;
+    countQuery.exec("SELECT COUNT(*) FROM LIVREURES");
+    int totalLivreurs = countQuery.next() ? countQuery.value(0).toInt() : 0;
 
-    bool boxOk;
-    int nbrMaxBox = nbrMaxBoxStr.toInt(&boxOk);
-    if (!boxOk || nbrMaxBox <= 0) {
-        QMessageBox::warning(this, "Erreur", "Nombre maximal de box invalide !");
-        return;
-    }
+    QChartView *pieChartView = new QChartView();
+    QPieSeries *pieSeries = new QPieSeries();
 
-    if (cinLivreur.isEmpty() || nomLivreur.isEmpty() || prenomLivreur.isEmpty() || vehiculeLivreur.isEmpty() || emailLivreur.isEmpty()) {
-        QMessageBox::warning(this, "Erreur", "Veuillez remplir tous les champs !");
-        return;
-    }
-
-    // Requête de mise à jour
     QSqlQuery query;
-    query.prepare("UPDATE LIVREURES SET CINLIVREUR = :cinLivreur, NOMLIVREUR = :nomLivreur, "
-                  "PRENOMLIVREUR = :prenomLivreur, TELEPHONELIVREUR = :telephone, "
-                  "VEHICULELIVREUR = :vehiculeLivreur, NBRMAXBOX = :nbrMaxBox, "
-                  "ETATLIVREUR = :etatLivreur, EMAILLIVREUR = :emailLivreur WHERE IDLIVREUR = :id");
+    query.exec("SELECT VEHICULELIVREUR, COUNT(*) FROM LIVREURES GROUP BY VEHICULELIVREUR");
 
-    query.bindValue(":cinLivreur", cinLivreur);
-    query.bindValue(":nomLivreur", nomLivreur);
-    query.bindValue(":prenomLivreur", prenomLivreur);
-    query.bindValue(":telephone", telephoneStr.toInt());
-    query.bindValue(":vehiculeLivreur", vehiculeLivreur);
-    query.bindValue(":nbrMaxBox", nbrMaxBox);
-    query.bindValue(":etatLivreur", etatLivreur);
-    query.bindValue(":emailLivreur", emailLivreur);
-    query.bindValue(":id", selectedLivreurId);  // L'ID sélectionné pour modification
+    static const QStringList colors = {"#3498DB", "#F39C12", "#2ECC71", "#E74C3C", "#9B59B6", "#16A085"};
 
-    if (query.exec()) {
-        QMessageBox::information(this, "Succès", "Livreur modifié avec succès !");
-        loadTableData();  // Mettre à jour la table après modification
-    } else {
-        QMessageBox::critical(this, "Erreur", "Erreur de modification : " + query.lastError().text());
+    int sliceIndex = 0;
+    while (query.next()) {
+        QString vehicule = query.value(0).toString();
+        int count = query.value(1).toInt();
+        double percentage = totalLivreurs > 0 ? (100.0 * count / totalLivreurs) : 0;
+
+        QPieSlice *slice = pieSeries->append(vehicule, count);
+        slice->setLabelVisible(true);
+        slice->setLabel(QString("%1\n%2 livreurs\n%3%")
+                            .arg(vehicule)
+                            .arg(count)
+                            .arg(percentage, 0, 'f', 1));
+        slice->setColor(QColor(colors.at(sliceIndex % colors.size())));
+        sliceIndex++;
+    }
+
+    QChart *pieChart = new QChart();
+    pieChart->addSeries(pieSeries);
+    pieChart->setTitle("📌 Répartition par Type de Véhicule (Total: " + QString::number(totalLivreurs) + ")");
+    pieChart->setTitleFont(titleFont);
+    pieChart->legend()->setVisible(true);
+    pieChart->legend()->setAlignment(Qt::AlignRight);
+    pieChart->setAnimationOptions(QChart::SeriesAnimations);
+    pieChartView->setChart(pieChart);
+    pieChartView->setRenderHint(QPainter::Antialiasing);
+    pieChartView->setMinimumHeight(270);
+
+    QGroupBox *pieBox = createStyledGroupBox("🛵 Répartition des Livreurs par Véhicule");
+    QVBoxLayout *pieLayout = new QVBoxLayout(pieBox);
+    pieLayout->addWidget(pieChartView);
+
+    QChartView *stackedBarView = new QChartView();
+    QStackedBarSeries *stackedSeries = new QStackedBarSeries();
+
+    query.exec("SELECT VEHICULELIVREUR, ETATLIVREUR, COUNT(*) FROM LIVREURES GROUP BY VEHICULELIVREUR, ETATLIVREUR");
+
+    QMap<QString, QBarSet*> barSets;
+    QStringList categories;
+
+    while (query.next()) {
+        QString vehicule = query.value(0).toString();
+        QString etat = query.value(1).toString();
+        int count = query.value(2).toInt();
+
+        if (!categories.contains(vehicule)) {
+            categories << vehicule;
+        }
+
+        if (!barSets.contains(etat)) {
+            QBarSet *set = new QBarSet(etat);
+            if (etat == "Libre") {
+                set->setColor(QColor("#2ECC71"));
+            } else {
+                set->setColor(QColor("#E74C3C"));
+            }
+            barSets[etat] = set;
+        }
+
+        int index = categories.indexOf(vehicule);
+        while (barSets[etat]->count() <= index) {
+            barSets[etat]->append(0);
+        }
+        barSets[etat]->replace(index, count);
+    }
+
+    foreach (QBarSet *set, barSets) {
+        stackedSeries->append(set);
+    }
+
+    QChart *stackedBarChart = new QChart();
+    stackedBarChart->addSeries(stackedSeries);
+    stackedBarChart->setTitle("📈 Disponibilité par Type de Véhicule");
+    stackedBarChart->setTitleFont(titleFont);
+    stackedBarChart->setAnimationOptions(QChart::SeriesAnimations);
+
+    QBarCategoryAxis *axisX = new QBarCategoryAxis();
+    axisX->append(categories);
+    stackedBarChart->addAxis(axisX, Qt::AlignBottom);
+    stackedSeries->attachAxis(axisX);
+
+    QValueAxis *axisY = new QValueAxis();
+    axisY->setTitleText("Nombre de livreurs");
+    stackedBarChart->addAxis(axisY, Qt::AlignLeft);
+    stackedSeries->attachAxis(axisY);
+
+    stackedBarChart->legend()->setVisible(true);
+    stackedBarChart->legend()->setAlignment(Qt::AlignBottom);
+    stackedBarView->setChart(stackedBarChart);
+    stackedBarView->setRenderHint(QPainter::Antialiasing);
+    stackedBarView->setMinimumHeight(250);
+
+    QGroupBox *barBox = createStyledGroupBox("📊 Disponibilité des Livreurs");
+    QVBoxLayout *barLayout = new QVBoxLayout(barBox);
+    barLayout->addWidget(stackedBarView);
+
+    QGroupBox *infoBox = createStyledGroupBox("🔎 Indicateurs Clés");
+    QGridLayout *infoLayout = new QGridLayout();
+
+    int libre = 0;
+    query.exec("SELECT COUNT(*) FROM LIVREURES WHERE ETATLIVREUR = 'Libre'");
+    if (query.next()) {
+        libre = query.value(0).toInt();
+    }
+
+    auto createInfoLabel = [](const QString &text, const QString &color) {
+        QLabel *label = new QLabel(text);
+        label->setAlignment(Qt::AlignCenter);
+        label->setStyleSheet(QString(R"(
+            QLabel {
+                background-color: %1;
+                color: white;
+                padding: 8px;
+                border-radius: 12px;
+                font-weight: bold;
+                font-size: 13px;
+                min-width: 140px;
+            })").arg(color));
+        return label;
+    };
+
+    infoLayout->addWidget(createInfoLabel(QString("🚚 Total Livreurs: %1").arg(totalLivreurs), "#2980B9"), 0, 0);
+    infoLayout->addWidget(createInfoLabel(QString("✅ Disponibles: %1 (%2%)")
+                                              .arg(libre)
+                                              .arg(totalLivreurs > 0 ? 100.0 * libre / totalLivreurs : 0, 0, 'f', 1),
+                                          "#27AE60"), 0, 1);
+
+    infoBox->setLayout(infoLayout);
+
+    mainLayout->addWidget(infoBox);
+    mainLayout->addWidget(pieBox);
+    mainLayout->addWidget(barBox);
+
+    statsDialog->setLayout(mainLayout);
+    statsDialog->exec();
+}
+
+void MainWindow::on_statsButton_clicked()
+{
+    showStatistics();
+}
+
+void MainWindow::on_pdfButton_clicked()
+{
+    QDialog *exportDialog = new QDialog(this);
+    exportDialog->setWindowTitle("Exportation des Livreurs");
+    exportDialog->resize(800, 600);
+
+    QVBoxLayout *layout = new QVBoxLayout(exportDialog);
+
+    QSqlQueryModel *model = new QSqlQueryModel(this);
+    model->setQuery("SELECT IDLIVREUR, CINLIVREUR, NOMLIVREUR, PRENOMLIVREUR, TELEPHONELIVREUR, VEHICULELIVREUR, NBRMAXBOX, ETATLIVREUR, EMAILLIVREUR, IMAGEPATH FROM LIVREURES");
+
+    QTableView *tableView = new QTableView(exportDialog);
+    tableView->setModel(model);
+    tableView->setSelectionMode(QAbstractItemView::SingleSelection);
+    tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
+    tableView->resizeColumnsToContents();
+
+    QPushButton *pdfExportButton = new QPushButton("Exporter en PDF", exportDialog);
+    QPushButton *closeButton = new QPushButton("Fermer", exportDialog);
+
+    QString buttonStyle = "QPushButton { padding: 8px; font-weight: bold; }";
+    pdfExportButton->setStyleSheet(buttonStyle + "background-color: #e74c3c; color: white;");
+    closeButton->setStyleSheet(buttonStyle + "background-color: #95a5a6; color: white;");
+
+    layout->addWidget(tableView);
+
+    QHBoxLayout *buttonLayout = new QHBoxLayout();
+    buttonLayout->addWidget(pdfExportButton);
+    buttonLayout->addWidget(closeButton);
+
+    layout->addLayout(buttonLayout);
+
+    connect(pdfExportButton, &QPushButton::clicked, this, [this, model]() {
+        exportToPDF(model);
+    });
+
+    connect(closeButton, &QPushButton::clicked, exportDialog, &QDialog::accept);
+
+    exportDialog->exec();
+}
+
+
+
+void MainWindow::exportToPDF(QSqlQueryModel *model)
+{
+    QString fileName = QFileDialog::getSaveFileName(this, "Exporter en PDF", "", "Fichiers PDF (*.pdf)");
+    if (fileName.isEmpty()) return;
+
+    if (!fileName.endsWith(".pdf", Qt::CaseInsensitive))
+        fileName += ".pdf";
+
+    QPrinter printer(QPrinter::HighResolution);
+    printer.setOutputFormat(QPrinter::PdfFormat);
+    printer.setOutputFileName(fileName);
+    printer.setPageSize(QPageSize(QPageSize::A4));
+    printer.setPageMargins(QMarginsF(15, 15, 15, 15));
+
+    QString html;
+    html += "<html><head><meta charset='utf-8'></head><body>";
+    html += "<h1 style='text-align:center; color:#2c3e50;'>Liste des Livreurs</h1>";
+    html += "<p style='text-align:center;'>Généré le " + QDateTime::currentDateTime().toString("dd/MM/yyyy HH:mm") + "</p>";
+    html += "<table border='1' cellspacing='0' cellpadding='5' width='100%' style='border-collapse:collapse;'>";
+
+    html += "<tr style='background-color:#3498db; color:white;'>";
+    for (int col = 0; col < model->columnCount(); ++col) {
+        html += "<th style='padding:8px; text-align:center;'>" + model->headerData(col, Qt::Horizontal).toString() + "</th>";
+    }
+    html += "</tr>";
+
+    for (int row = 0; row < model->rowCount(); ++row) {
+        QString rowColor = (row % 2 == 0) ? "#ffffff" : "#f2f2f2";
+        html += "<tr style='background-color:" + rowColor + ";'>";
+        for (int col = 0; col < model->columnCount(); ++col) {
+            QVariant data = model->data(model->index(row, col));
+            QString displayText;
+
+            QString header = model->headerData(col, Qt::Horizontal).toString();
+            if (header == "IMAGEPATH") {
+                QString imagePath = data.toString();
+                QImage image(imagePath);
+                if (!image.isNull()) {
+                    QString imageBase64;
+                    QBuffer buffer;
+                    image.save(&buffer, "PNG");
+                    imageBase64 = QString::fromLatin1(buffer.data().toBase64());
+                    displayText = "<img src='data:image/png;base64," + imageBase64 + "' width='50' height='50'/>";
+                } else {
+                    displayText = "Image non trouvée";
+                }
+            } else {
+                displayText = data.toString();
+            }
+
+            html += "<td style='padding:8px; text-align:center;'>" + displayText + "</td>";
+        }
+        html += "</tr>";
+    }
+
+    html += "</table></body></html>";
+
+    QTextDocument doc;
+    doc.setHtml(html);
+    doc.setPageSize(printer.pageRect(QPrinter::Point).size());
+    doc.print(&printer);
+
+    QMessageBox::information(this, "Export PDF", "Le fichier PDF a été généré avec succès !");
+}
+
+void MainWindow::on_historiqueButton_clicked() {
+    Historique::synchroniserHistorique();
+
+    QDialog *dialog = new QDialog(this);
+    dialog->setWindowTitle("Historique complet");
+    dialog->resize(800, 600);
+
+    QVBoxLayout *layout = new QVBoxLayout(dialog);
+
+    QTextEdit *textEdit = new QTextEdit(dialog);
+    textEdit->setReadOnly(true);
+    textEdit->setPlainText(Historique::lireHistorique());
+
+    QPushButton *closeButton = new QPushButton("Fermer", dialog);
+    connect(closeButton, &QPushButton::clicked, dialog, &QDialog::accept);
+
+    layout->addWidget(textEdit);
+    layout->addWidget(closeButton);
+
+    dialog->exec();
+}
+
+void MainWindow::on_imageButton_clicked()
+{
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Sélectionner une image"), "", tr("Images (*.png *.jpg *.bmp)"));
+    if (!fileName.isEmpty()) {
+        ui->imagePath->setText(fileName);
     }
 }
 
-// **Méthode pour supprimer un livreur de la base de données**
-void MainWindow::on_b4_clicked()
+
+void MainWindow::on_serialDataReceived()
 {
-    if (selectedLivreurId.isEmpty()) {
-        QMessageBox::warning(this, "Erreur", "Veuillez sélectionner un livreur à supprimer !");
+    static QByteArray buffer; // Pour accumuler les données
+    buffer.append(serial->readAll());
+
+    qDebug() << "Buffer reçu : " << buffer;
+
+    // Traiter toutes les lignes complètes reçues
+    while (buffer.contains('\n')) {
+        int newlinePos = buffer.indexOf('\n');
+        QByteArray line = buffer.left(newlinePos).trimmed();
+        buffer = buffer.mid(newlinePos + 1);
+
+        qDebug() << "Ligne traitée : " << line;
+
+        if (line.isEmpty()) {
+            continue; // Ignorer les lignes vides
+        }
+
+        QString id = QString::fromUtf8(line);
+        qDebug() << "ID reçu : " << id;
+
+        // Vérifier dans la base
+        verifierEtatLivreur(id);
+    }
+}
+
+
+void MainWindow::verifierEtatLivreur(QString id)
+{
+    qDebug() << "Vérification de l'ID : " << id;
+
+    // Supprimer les espaces et caractères non désirés
+    id = id.trimmed();
+
+    // Vérifier que l'ID n'est pas vide
+    if (id.isEmpty()) {
+        qDebug() << "ID vide reçu";
+        serial->write("NOT_FOUND\n");
         return;
     }
 
-    // Demander confirmation avant de supprimer
-    QMessageBox::StandardButton reply;
-    reply = QMessageBox::question(this, "Confirmation", "Êtes-vous sûr de vouloir supprimer ce livreur ?",
-                                  QMessageBox::Yes | QMessageBox::No);
+    // Convertir en entier
+    bool ok;
+    int idInt = id.toInt(&ok);
 
-    if (reply == QMessageBox::Yes) {
-        QSqlQuery query;
-        query.prepare("DELETE FROM LIVREURES WHERE IDLIVREUR = :id");
-        query.bindValue(":id", selectedLivreurId);
-
-        if (query.exec()) {
-            QMessageBox::information(this, "Succès", "Livreur supprimé avec succès !");
-            loadTableData();  // Mettre à jour la table après suppression
-        } else {
-            QMessageBox::critical(this, "Erreur", "Erreur de suppression : " + query.lastError().text());
-        }
+    // Vérifier que la conversion a réussi et que l'ID est >= 1
+    if (!ok || idInt < 1) {
+        qDebug() << "ID invalide (doit être un nombre >= 1) : " << id;
+        serial->write("NOT_FOUND\n");
+        return;
     }
-}
 
-// **Sélectionner une ligne du tableau pour la modification ou suppression**
-void MainWindow::onTableRowClicked(int row, int column)
-{
-    // Récupérer l'ID du livreur à partir de la première colonne
-    selectedLivreurId = ui->tab1->item(row, 0)->text();
+    QSqlQuery query;
+    query.prepare("SELECT etatlivreur FROM LIVREURES WHERE IDLIVREUR = :id");
+    query.bindValue(":id", idInt);
 
-    // Remplir les champs avec les informations du livreur sélectionné
-    ui->cin->setText(ui->tab1->item(row, 1)->text());
-    ui->nom->setText(ui->tab1->item(row, 2)->text());
-    ui->prenom->setText(ui->tab1->item(row, 3)->text());
-    ui->tel->setText(ui->tab1->item(row, 4)->text());
-    ui->vehicule->setText(ui->tab1->item(row, 5)->text());
-    ui->nb->setValue(ui->tab1->item(row, 6)->text().toInt());
-    ui->email->setText(ui->tab1->item(row, 8)->text());
+    if (!query.exec()) {
+        qDebug() << "Erreur lors de l'exécution de la requête : " << query.lastError().text();
+        serial->write("NOT_FOUND\n");
+        return;
+    }
 
-    // Remplir le statut de l'état
-    QString etat = ui->tab1->item(row, 7)->text();
-    if (etat == "Libre") {
-        ui->libre->setChecked(true);
-        ui->non->setChecked(false);
+    if (query.next()) {
+        QString etat = query.value(0).toString().trimmed().toLower();
+        qDebug() << "État du livreur : " << etat;
+
+        if (etat == "libre") {
+            serial->write("OK\n");
+            qDebug() << "Livreur libre. Réponse envoyée: OK";
+        } else {
+            serial->write("BUSY\n");
+            qDebug() << "Livreur occupé. Réponse envoyée: BUSY";
+        }
     } else {
-        ui->non->setChecked(true);
-        ui->libre->setChecked(false);
+        serial->write("NOT_FOUND\n");
+        qDebug() << "ID introuvable dans la base de données. Réponse envoyée: NOT_FOUND";
     }
 }
