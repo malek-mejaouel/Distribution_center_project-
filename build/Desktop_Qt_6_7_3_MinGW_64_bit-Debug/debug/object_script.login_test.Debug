@@ -1,0 +1,11 @@
+debug/Equipement.o
+debug/User.o
+debug/connection.o
+debug/dialog.o
+debug/equipments.o
+debug/main.o
+debug/mainwindow.o
+debug/qrc_Ressources.o
+debug/moc_dialog.o
+debug/moc_equipments.o
+debug/moc_mainwindow.o
