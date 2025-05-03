@@ -1,0 +1,15 @@
+release/Equipement.o
+release/User.o
+release/arduino.o
+release/connection.o
+release/dialog.o
+release/equipments.o
+release/livreur.o
+release/livreurs.o
+release/main.o
+release/mainwindow.o
+release/qrc_Ressources.o
+release/moc_dialog.o
+release/moc_equipments.o
+release/moc_livreurs.o
+release/moc_mainwindow.o

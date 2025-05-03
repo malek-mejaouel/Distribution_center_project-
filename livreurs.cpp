@@ -72,7 +72,7 @@ livreurs::~livreurs()
 
 void livreurs::on_stateButton_clicked()
 {
-    int test = A.connect_arduino(); // A est ton objet ArduinoConnection (je suppose)
+    int test = A.connect_arduino(); // A est ton objet ArduinoConnection
 
     if (test == 0) {
         QMessageBox::information(this, "Connexion", "Connexion Arduino réussie sur port COM5.");
