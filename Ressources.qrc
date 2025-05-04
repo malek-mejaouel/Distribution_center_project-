@@ -1,0 +1,31 @@
+<RCC>
+    <qresource prefix="/new/prefix1">
+        <file>Ressources/box-3-48.png</file>
+        <file>Ressources/building-48.png</file>
+        <file>Ressources/delivery-48.png</file>
+        <file>Ressources/logo.png</file>
+        <file>Ressources/log-out.svg</file>
+        <file>Ressources/logout-48.png</file>
+        <file>Ressources/map.svg</file>
+        <file>Ressources/paper-48.png</file>
+        <file>Ressources/search-3-48.png</file>
+        <file>Ressources/settings.svg</file>
+        <file>Ressources/settings-5-48.png</file>
+        <file>Ressources/tool-box-48.png</file>
+        <file>Ressources/user.svg</file>
+        <file>Ressources/user-48.png</file>
+        <file>Ressources/pngwing.com.png</file>
+        <file>Ressources/pngwing.com (1).png</file>
+        <file>Ressources/clipart1107475.png</file>
+        <file>Ressources/filter.svg</file>
+        <file>Ressources/pdf-file-svgrepo-com.svg</file>
+        <file>Ressources/delete-button-svgrepo-com.svg</file>
+        <file>Ressources/update-icon.svg</file>
+        <file>Ressources/back-button-svgrepo-com.svg</file>
+        <file>Ressources/user-profile-svgrepo-com.svg</file>
+        <file>Ressources/add-circle-outline-svgrepo-com.svg</file>
+        <file>Ressources/image-removebg-preview.png</file>
+        <file>Ressources/e0ff5635-a1d6-406a-ae4c-6240633d745e.png</file>
+        <file>Ressources/up-and-down-arrow.png</file>
+    </qresource>
+</RCC>

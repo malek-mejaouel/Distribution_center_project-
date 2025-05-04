@@ -1,0 +1,15 @@
+debug/Equipement.o
+debug/User.o
+debug/arduino.o
+debug/connection.o
+debug/dialog.o
+debug/equipments.o
+debug/livreur.o
+debug/livreurs.o
+debug/main.o
+debug/mainwindow.o
+debug/qrc_Ressources.o
+debug/moc_dialog.o
+debug/moc_equipments.o
+debug/moc_livreurs.o
+debug/moc_mainwindow.o
