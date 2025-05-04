@@ -72,7 +72,7 @@ private:
     void performSorting(const QString &order);
     bool isInstitutSelected();
     void searchInstitut(const QString &name);
-    void checkcommandelivre();
+
     double latitude;
     double longitude;
     QByteArray data; // variable contenant les données reçues

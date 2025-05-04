@@ -252,9 +252,16 @@ QSqlQueryModel* Institut::trier(const QString &critere, const QString &ordre)
         "FROM INSTITUTS "
         );
 
-    if (critere == "ADRESSE_INST") {
-        requete += "ORDER BY LOWER(ADRESSE_INST) " + ordre;
+    // Colonnes textuelles à trier en ignorant la casse
+    QStringList colonnesTextuelles = {
+        "NOM_INST", "ADRESSE_INST", "RESPONSABLE_INST",
+        "TELEPHONE_INST", "EMAIL_INST"
+    };
+
+    if (colonnesTextuelles.contains(critere)) {
+        requete += "ORDER BY LOWER(" + critere + ") " + ordre;
     } else {
+        // Colonnes numériques (ID_INST, CAPACITE_INST, ID_EMPLOYE)
         requete += "ORDER BY " + critere + " " + ordre;
     }
 
@@ -268,7 +275,6 @@ QSqlQueryModel* Institut::trier(const QString &critere, const QString &ordre)
 
     return model;
 }
-
 void Institut::calculerStatistiquesCapacite(int &total, double &average, int &min, int &max)
 {
     QSqlQuery query;

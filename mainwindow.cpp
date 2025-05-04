@@ -84,7 +84,7 @@ MainWindow::MainWindow(QWidget *parent)
     trayicon=new QSystemTrayIcon(this);
     trayicon->setIcon(QIcon(":/ressources/box-3-48.png"));
     trayicon->show();
-    trayicon->setToolTip("instituts ");
+    trayicon->setToolTip("FullMark ");
 
     int ret=A.connect_arduino(); // lancer la connexion à arduino
     switch(ret){
@@ -590,17 +590,45 @@ void MainWindow::afficherIdsEmployes()
     }
 }
 
+
 void MainWindow::on_noti_clicked()
 {
-    int id = ui->notifylineedit->text().toInt();
+    bool ok;
+    int id = ui->notifylineedit->text().toInt(&ok);
 
-    trayicon->showMessage(
-        "Alerte Livraison",
-        QString("Dear employee %1, your box was successfully delivered.").arg(id),
-        QSystemTrayIcon::Warning,
-        10000
-        );
+    // Vérification de la conversion numérique
+    if (!ok || id <= 0) {
+        QMessageBox::warning(this, "Erreur", "ID employé invalide !");
+        return;
+    }
+
+    // Vérification de l'existence dans la base de données
+    QSqlQuery checkQuery;
+    checkQuery.prepare("SELECT ID_EMPLOYE FROM EMPLOYEES WHERE ID_EMPLOYE = :id");
+    checkQuery.bindValue(":id", id);
+
+    if (!checkQuery.exec()) {
+        qDebug() << "Erreur de vérification ID:" << checkQuery.lastError().text();
+        QMessageBox::critical(this, "Erreur", "Erreur de base de données !");
+        return;
+    }
+
+    if (checkQuery.next()) {
+        // ID existe -> envoyer notification
+        trayicon->showMessage(
+            "Alerte Livraison",
+            QString("Dear employee %1, your box was successfully delivered.").arg(id),
+            QSystemTrayIcon::Information,
+            10000
+            );
+    } else {
+        // ID n'existe pas -> afficher alerte
+        QMessageBox::warning(this, "Non trouvé",
+                             QString("Aucun employé avec l'ID %1 trouvé dans la base de données !").arg(id));
+    }
 }
+
+
 
 void MainWindow::notifyUser(const QString &title, const QString &message, QSystemTrayIcon::MessageIcon icon)
 {
@@ -753,7 +781,3 @@ void MainWindow::on_map_clicked()
     mapDialog->exec();
 }
 
-void MainWindow::checkcommandelivre()
-{
-    // Implementation of checkcommandelivre
-}

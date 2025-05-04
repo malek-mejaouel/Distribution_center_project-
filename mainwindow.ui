@@ -56,7 +56,7 @@ font: 700 10pt &quot;Segoe UI&quot;;
        <enum>QTabWidget::TabShape::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>1</number>
       </property>
       <property name="elideMode">
        <enum>Qt::TextElideMode::ElideNone</enum>
@@ -157,37 +157,11 @@ font: 700 10pt &quot;Segoe UI&quot;;
           <normaloff>:/new/prefix1/Ressources/pdf-file-svgrepo-com.svg</normaloff>:/new/prefix1/Ressources/pdf-file-svgrepo-com.svg</iconset>
         </property>
        </widget>
-       <widget class="QPushButton" name="b3">
-        <property name="geometry">
-         <rect>
-          <x>570</x>
-          <y>440</y>
-          <width>101</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">background-color: rgb(85, 170, 255);
-font: 700 10pt &quot;Segoe UI&quot;;
-    color: #FFFFFF;
-    border: none;
-    border-radius: 8px;
-    padding: 8px 16px;
-    font-size: 14px;</string>
-        </property>
-        <property name="text">
-         <string> Update</string>
-        </property>
-        <property name="icon">
-         <iconset>
-          <normaloff>:/new/prefix1/Ressources/update-icon.svg</normaloff>:/new/prefix1/Ressources/update-icon.svg</iconset>
-        </property>
-       </widget>
        <widget class="QPushButton" name="b4">
         <property name="geometry">
          <rect>
-          <x>570</x>
-          <y>500</y>
+          <x>490</x>
+          <y>470</y>
           <width>101</width>
           <height>31</height>
          </rect>
@@ -603,7 +577,7 @@ font:  24pt ;</string>
         <widget class="QPushButton" name="b2">
          <property name="geometry">
           <rect>
-           <x>380</x>
+           <x>60</x>
            <y>500</y>
            <width>121</width>
            <height>31</height>
@@ -805,6 +779,32 @@ font: 700 10pt &quot;Segoe UI&quot;;
          </property>
          <property name="cursorMoveStyle">
           <enum>Qt::CursorMoveStyle::LogicalMoveStyle</enum>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="b3">
+         <property name="geometry">
+          <rect>
+           <x>370</x>
+           <y>500</y>
+           <width>101</width>
+           <height>31</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(85, 170, 255);
+font: 700 10pt &quot;Segoe UI&quot;;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 14px;</string>
+         </property>
+         <property name="text">
+          <string>modify</string>
+         </property>
+         <property name="icon">
+          <iconset>
+           <normaloff>:/new/prefix1/Ressources/update-icon.svg</normaloff>:/new/prefix1/Ressources/update-icon.svg</iconset>
          </property>
         </widget>
        </widget>
