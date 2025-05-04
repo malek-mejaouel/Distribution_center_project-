@@ -68,6 +68,7 @@ public:
     QLabel *label_17;
     QLineEdit *prix_input;
     QPushButton *b2;
+    QLabel *label_13;
     QWidget *tab_7;
     QChartView *chartViewFunctionalites;
     QWidget *tab_8;
@@ -189,7 +190,7 @@ public:
         pushButton_17->setIcon(icon6);
         label_8 = new QLabel(verticalWidget);
         label_8->setObjectName("label_8");
-        label_8->setGeometry(QRect(0, -10, 201, 191));
+        label_8->setGeometry(QRect(0, 30, 201, 111));
         label_8->setStyleSheet(QString::fromUtf8("image: url(:/new/prefix1/Ressources/e0ff5635-a1d6-406a-ae4c-6240633d745e.png);\n"
 "background:transparent;"));
         tabWidget = new QTabWidget(Equipments);
@@ -235,7 +236,7 @@ public:
 "    min-width: 150px;"));
         b10 = new QPushButton(tab_5);
         b10->setObjectName("b10");
-        b10->setGeometry(QRect(70, 470, 171, 41));
+        b10->setGeometry(QRect(70, 470, 181, 41));
         b10->setStyleSheet(QString::fromUtf8("background-color: rgb(85, 170, 255);\n"
 "font: 700 10pt \"Segoe UI\";\n"
 "    color: #FFFFFF;\n"
@@ -248,7 +249,7 @@ public:
         b10->setIcon(icon7);
         b7 = new QPushButton(tab_5);
         b7->setObjectName("b7");
-        b7->setGeometry(QRect(570, 440, 101, 31));
+        b7->setGeometry(QRect(570, 440, 111, 31));
         b7->setStyleSheet(QString::fromUtf8("background-color: rgb(85, 170, 255);\n"
 "font: 700 10pt \"Segoe UI\";\n"
 "    color: #FFFFFF;\n"
@@ -261,7 +262,7 @@ public:
         b7->setIcon(icon8);
         b4 = new QPushButton(tab_5);
         b4->setObjectName("b4");
-        b4->setGeometry(QRect(570, 500, 101, 31));
+        b4->setGeometry(QRect(570, 500, 111, 31));
         b4->setStyleSheet(QString::fromUtf8("background-color: rgb(85, 170, 255);\n"
 "font: 700 10pt \"Segoe UI\";\n"
 "    color: #FFFFFF;\n"
@@ -337,11 +338,11 @@ public:
         tab_6->setObjectName("tab_6");
         widget_3 = new QWidget(tab_6);
         widget_3->setObjectName("widget_3");
-        widget_3->setGeometry(QRect(40, 30, 641, 521));
+        widget_3->setGeometry(QRect(20, 10, 641, 521));
         widget_3->setStyleSheet(QString::fromUtf8("background-color: #D3D3D3; border-radius: 15px;"));
         label_10 = new QLabel(widget_3);
         label_10->setObjectName("label_10");
-        label_10->setGeometry(QRect(60, 30, 101, 41));
+        label_10->setGeometry(QRect(50, 70, 121, 41));
         label_10->setStyleSheet(QString::fromUtf8(" background-color: #FFFFFF;\n"
 "    border: 2px solid #C0E8E0;\n"
 "    border-radius: 8px;\n"
@@ -350,7 +351,7 @@ public:
 "    color: #1E2350;"));
         label_11 = new QLabel(widget_3);
         label_11->setObjectName("label_11");
-        label_11->setGeometry(QRect(60, 90, 101, 41));
+        label_11->setGeometry(QRect(50, 120, 121, 41));
         label_11->setStyleSheet(QString::fromUtf8(" background-color: #FFFFFF;\n"
 "    border: 2px solid #C0E8E0;\n"
 "    border-radius: 8px;\n"
@@ -359,7 +360,7 @@ public:
 "    color: #1E2350;"));
         labelllll = new QLabel(widget_3);
         labelllll->setObjectName("labelllll");
-        labelllll->setGeometry(QRect(60, 210, 101, 41));
+        labelllll->setGeometry(QRect(50, 170, 121, 41));
         labelllll->setStyleSheet(QString::fromUtf8(" background-color: #FFFFFF;\n"
 "    border: 2px solid #C0E8E0;\n"
 "    border-radius: 8px;\n"
@@ -368,7 +369,7 @@ public:
 "    color: #1E2350;"));
         label_15 = new QLabel(widget_3);
         label_15->setObjectName("label_15");
-        label_15->setGeometry(QRect(60, 270, 101, 41));
+        label_15->setGeometry(QRect(50, 220, 121, 41));
         label_15->setStyleSheet(QString::fromUtf8(" background-color: #FFFFFF;\n"
 "    border: 2px solid #C0E8E0;\n"
 "    border-radius: 8px;\n"
@@ -377,7 +378,7 @@ public:
 "    color: #1E2350;"));
         nom_input = new QLineEdit(widget_3);
         nom_input->setObjectName("nom_input");
-        nom_input->setGeometry(QRect(170, 40, 271, 31));
+        nom_input->setGeometry(QRect(200, 70, 291, 41));
         nom_input->setStyleSheet(QString::fromUtf8(" background-color: #FFFFFF;\n"
 "    border: 2px solid #C0E8E0;\n"
 "    border-radius: 8px;\n"
@@ -387,7 +388,7 @@ public:
         nom_input->setCursorMoveStyle(Qt::CursorMoveStyle::LogicalMoveStyle);
         quantite_input = new QLineEdit(widget_3);
         quantite_input->setObjectName("quantite_input");
-        quantite_input->setGeometry(QRect(170, 90, 271, 31));
+        quantite_input->setGeometry(QRect(200, 120, 291, 41));
         quantite_input->setStyleSheet(QString::fromUtf8(" background-color: #FFFFFF;\n"
 "    border: 2px solid #C0E8E0;\n"
 "    border-radius: 8px;\n"
@@ -397,7 +398,7 @@ public:
         quantite_input->setCursorMoveStyle(Qt::CursorMoveStyle::LogicalMoveStyle);
         marque_input = new QLineEdit(widget_3);
         marque_input->setObjectName("marque_input");
-        marque_input->setGeometry(QRect(170, 210, 271, 31));
+        marque_input->setGeometry(QRect(200, 170, 291, 41));
         marque_input->setStyleSheet(QString::fromUtf8(" background-color: #FFFFFF;\n"
 "    border: 2px solid #C0E8E0;\n"
 "    border-radius: 8px;\n"
@@ -407,7 +408,7 @@ public:
         marque_input->setCursorMoveStyle(Qt::CursorMoveStyle::LogicalMoveStyle);
         b3 = new QPushButton(widget_3);
         b3->setObjectName("b3");
-        b3->setGeometry(QRect(250, 450, 121, 31));
+        b3->setGeometry(QRect(270, 420, 121, 31));
         b3->setStyleSheet(QString::fromUtf8("background-color: rgb(85, 170, 255);\n"
 "font: 700 10pt \"Segoe UI\";\n"
 "    color: #FFFFFF;\n"
@@ -418,7 +419,7 @@ public:
         b3->setIcon(icon8);
         b1 = new QPushButton(widget_3);
         b1->setObjectName("b1");
-        b1->setGeometry(QRect(60, 450, 121, 31));
+        b1->setGeometry(QRect(70, 420, 121, 31));
         b1->setStyleSheet(QString::fromUtf8("background-color: rgb(85, 170, 255);\n"
 "font: 700 10pt \"Segoe UI\";\n"
 "    color: #FFFFFF;\n"
@@ -431,12 +432,12 @@ public:
         b1->setIcon(icon12);
         dateEdit = new QDateEdit(widget_3);
         dateEdit->setObjectName("dateEdit");
-        dateEdit->setGeometry(QRect(180, 150, 271, 41));
+        dateEdit->setGeometry(QRect(200, 320, 291, 41));
         dateEdit->setStyleSheet(QString::fromUtf8("background-color: rgb(255, 255, 255);\n"
 "color: rgb(0, 0, 0);"));
         label_16 = new QLabel(widget_3);
         label_16->setObjectName("label_16");
-        label_16->setGeometry(QRect(10, 150, 151, 41));
+        label_16->setGeometry(QRect(20, 320, 151, 41));
         label_16->setStyleSheet(QString::fromUtf8(" background-color: #FFFFFF;\n"
 "    border: 2px solid #C0E8E0;\n"
 "    border-radius: 8px;\n"
@@ -445,7 +446,7 @@ public:
 "    color: #1E2350;"));
         type_input = new QLineEdit(widget_3);
         type_input->setObjectName("type_input");
-        type_input->setGeometry(QRect(170, 270, 271, 31));
+        type_input->setGeometry(QRect(200, 220, 291, 41));
         type_input->setStyleSheet(QString::fromUtf8(" background-color: #FFFFFF;\n"
 "    border: 2px solid #C0E8E0;\n"
 "    border-radius: 8px;\n"
@@ -455,7 +456,7 @@ public:
         type_input->setCursorMoveStyle(Qt::CursorMoveStyle::LogicalMoveStyle);
         label_17 = new QLabel(widget_3);
         label_17->setObjectName("label_17");
-        label_17->setGeometry(QRect(60, 340, 101, 41));
+        label_17->setGeometry(QRect(50, 270, 121, 41));
         label_17->setStyleSheet(QString::fromUtf8(" background-color: #FFFFFF;\n"
 "    border: 2px solid #C0E8E0;\n"
 "    border-radius: 8px;\n"
@@ -464,7 +465,7 @@ public:
 "    color: #1E2350;"));
         prix_input = new QLineEdit(widget_3);
         prix_input->setObjectName("prix_input");
-        prix_input->setGeometry(QRect(170, 350, 271, 31));
+        prix_input->setGeometry(QRect(200, 270, 291, 41));
         prix_input->setStyleSheet(QString::fromUtf8(" background-color: #FFFFFF;\n"
 "    border: 2px solid #C0E8E0;\n"
 "    border-radius: 8px;\n"
@@ -474,7 +475,7 @@ public:
         prix_input->setCursorMoveStyle(Qt::CursorMoveStyle::LogicalMoveStyle);
         b2 = new QPushButton(widget_3);
         b2->setObjectName("b2");
-        b2->setGeometry(QRect(460, 450, 121, 31));
+        b2->setGeometry(QRect(460, 420, 121, 31));
         b2->setStyleSheet(QString::fromUtf8("background-color: rgb(85, 170, 255);\n"
 "font: 700 10pt \"Segoe UI\";\n"
 "    color: #FFFFFF;\n"
@@ -484,6 +485,13 @@ public:
 "    font-size: 14px;"));
         QIcon icon13(QIcon::fromTheme(QIcon::ThemeIcon::EditClear));
         b2->setIcon(icon13);
+        label_13 = new QLabel(widget_3);
+        label_13->setObjectName("label_13");
+        label_13->setGeometry(QRect(150, 10, 281, 41));
+        label_13->setStyleSheet(QString::fromUtf8("   color: #1E2350;\n"
+"font: 9pt \"Segoe UI\";\n"
+"font:  24pt ;"));
+        label_13->setAlignment(Qt::AlignmentFlag::AlignCenter);
         tabWidget->addTab(tab_6, QString());
         tab_7 = new QWidget();
         tab_7->setObjectName("tab_7");
@@ -510,10 +518,10 @@ public:
     {
         Equipments->setWindowTitle(QCoreApplication::translate("Equipments", "Dialog", nullptr));
         pushButton->setText(QCoreApplication::translate("Equipments", "Employee", nullptr));
-        pushButton_2->setText(QCoreApplication::translate("Equipments", "Equipement", nullptr));
-        pushButton_3->setText(QCoreApplication::translate("Equipments", "Examen", nullptr));
-        pushButton_4->setText(QCoreApplication::translate("Equipments", "Institut", nullptr));
-        pushButton_9->setText(QCoreApplication::translate("Equipments", "Livreur", nullptr));
+        pushButton_2->setText(QCoreApplication::translate("Equipments", "Equipment", nullptr));
+        pushButton_3->setText(QCoreApplication::translate("Equipments", "Exam", nullptr));
+        pushButton_4->setText(QCoreApplication::translate("Equipments", "Institute", nullptr));
+        pushButton_9->setText(QCoreApplication::translate("Equipments", "Delivery", nullptr));
         pushButton_10->setText(QCoreApplication::translate("Equipments", "Box", nullptr));
         pushButton_13->setText(QCoreApplication::translate("Equipments", "Settings", nullptr));
         pushButton_17->setText(QCoreApplication::translate("Equipments", "Log-out", nullptr));
@@ -565,6 +573,7 @@ public:
         label_17->setText(QCoreApplication::translate("Equipments", "Price :", nullptr));
         prix_input->setPlaceholderText(QString());
         b2->setText(QCoreApplication::translate("Equipments", "Cancel", nullptr));
+        label_13->setText(QCoreApplication::translate("Equipments", "EQUIPMENT ", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(tab_6), QCoreApplication::translate("Equipments", "Update/Add New", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(tab_7), QCoreApplication::translate("Equipments", "Statistics", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(tab_8), QCoreApplication::translate("Equipments", "Calendar", nullptr));

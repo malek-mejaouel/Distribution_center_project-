@@ -6,7 +6,7 @@
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
 
-#include "../../../dialog.h"
+#include "../../../../../Nouveau dossier (2)/Distribution_center_project--interface/dialog.h"
 #include <QtCore/qmetatype.h>
 
 #include <QtCore/qtmochelpers.h>
@@ -60,6 +60,7 @@ constexpr auto qt_meta_stringdata_CLASSDialogENDCLASS = QtMocHelpers::stringData
     "on_pushButton_14_clicked",
     "on_pushButton_11_clicked",
     "on_pushButton_7_clicked",
+    "on_pushButton_10_clicked",
     "on_pushButton_8_clicked",
     "onFilterRoleChanged",
     "role",
@@ -68,7 +69,8 @@ constexpr auto qt_meta_stringdata_CLASSDialogENDCLASS = QtMocHelpers::stringData
     "orderBy",
     "ascending",
     "on_b12_clicked",
-    "on_pushButton_2_clicked"
+    "on_pushButton_2_clicked",
+    "on_pushButton_9_clicked"
 );
 #else  // !QT_MOC_HAS_STRINGDATA
 #error "qtmochelpers.h not found or too old."
@@ -81,7 +83,7 @@ Q_CONSTINIT static const uint qt_meta_data_CLASSDialogENDCLASS[] = {
       12,       // revision
        0,       // classname
        0,    0, // classinfo
-      25,   14, // methods
+      27,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -89,33 +91,35 @@ Q_CONSTINIT static const uint qt_meta_data_CLASSDialogENDCLASS[] = {
        1,       // signalCount
 
  // signals: name, argc, parameters, tag, flags, initial metatype offsets
-       1,    0,  164,    2, 0x06,    1 /* Public */,
+       1,    0,  176,    2, 0x06,    1 /* Public */,
 
  // slots: name, argc, parameters, tag, flags, initial metatype offsets
-       3,    2,  165,    2, 0x08,    2 /* Private */,
-       6,    0,  170,    2, 0x08,    5 /* Private */,
-       7,    0,  171,    2, 0x08,    6 /* Private */,
-       8,    1,  172,    2, 0x08,    7 /* Private */,
-      10,    0,  175,    2, 0x08,    9 /* Private */,
-      11,    0,  176,    2, 0x08,   10 /* Private */,
-      12,    0,  177,    2, 0x08,   11 /* Private */,
-      13,    0,  178,    2, 0x08,   12 /* Private */,
-      14,    0,  179,    2, 0x08,   13 /* Private */,
-      15,    0,  180,    2, 0x08,   14 /* Private */,
-      16,    0,  181,    2, 0x08,   15 /* Private */,
-      17,    0,  182,    2, 0x08,   16 /* Private */,
-      18,    0,  183,    2, 0x08,   17 /* Private */,
-      19,    0,  184,    2, 0x08,   18 /* Private */,
-      20,    0,  185,    2, 0x08,   19 /* Private */,
-      22,    0,  186,    2, 0x08,   20 /* Private */,
-      23,    0,  187,    2, 0x08,   21 /* Private */,
-      24,    0,  188,    2, 0x08,   22 /* Private */,
-      25,    0,  189,    2, 0x08,   23 /* Private */,
-      26,    1,  190,    2, 0x08,   24 /* Private */,
-      28,    0,  193,    2, 0x08,   26 /* Private */,
-      29,    2,  194,    2, 0x08,   27 /* Private */,
-      32,    0,  199,    2, 0x08,   30 /* Private */,
-      33,    0,  200,    2, 0x08,   31 /* Private */,
+       3,    2,  177,    2, 0x08,    2 /* Private */,
+       6,    0,  182,    2, 0x08,    5 /* Private */,
+       7,    0,  183,    2, 0x08,    6 /* Private */,
+       8,    1,  184,    2, 0x08,    7 /* Private */,
+      10,    0,  187,    2, 0x08,    9 /* Private */,
+      11,    0,  188,    2, 0x08,   10 /* Private */,
+      12,    0,  189,    2, 0x08,   11 /* Private */,
+      13,    0,  190,    2, 0x08,   12 /* Private */,
+      14,    0,  191,    2, 0x08,   13 /* Private */,
+      15,    0,  192,    2, 0x08,   14 /* Private */,
+      16,    0,  193,    2, 0x08,   15 /* Private */,
+      17,    0,  194,    2, 0x08,   16 /* Private */,
+      18,    0,  195,    2, 0x08,   17 /* Private */,
+      19,    0,  196,    2, 0x08,   18 /* Private */,
+      20,    0,  197,    2, 0x08,   19 /* Private */,
+      22,    0,  198,    2, 0x08,   20 /* Private */,
+      23,    0,  199,    2, 0x08,   21 /* Private */,
+      24,    0,  200,    2, 0x08,   22 /* Private */,
+      25,    0,  201,    2, 0x08,   23 /* Private */,
+      26,    0,  202,    2, 0x08,   24 /* Private */,
+      27,    1,  203,    2, 0x08,   25 /* Private */,
+      29,    0,  206,    2, 0x08,   27 /* Private */,
+      30,    2,  207,    2, 0x08,   28 /* Private */,
+      33,    0,  212,    2, 0x08,   31 /* Private */,
+      34,    0,  213,    2, 0x08,   32 /* Private */,
+      35,    0,  214,    2, 0x08,   33 /* Private */,
 
  // signals: parameters
     QMetaType::Void,
@@ -140,9 +144,11 @@ Q_CONSTINIT static const uint qt_meta_data_CLASSDialogENDCLASS[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::QString,   27,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::QString, QMetaType::Bool,   30,   31,
+    QMetaType::Void, QMetaType::QString,   28,
+    QMetaType::Void,
+    QMetaType::Void, QMetaType::QString, QMetaType::Bool,   31,   32,
+    QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
 
@@ -199,6 +205,8 @@ Q_CONSTINIT const QMetaObject Dialog::staticMetaObject = { {
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'on_pushButton_7_clicked'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        // method 'on_pushButton_10_clicked'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'on_pushButton_8_clicked'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'onFilterRoleChanged'
@@ -213,6 +221,8 @@ Q_CONSTINIT const QMetaObject Dialog::staticMetaObject = { {
         // method 'on_b12_clicked'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'on_pushButton_2_clicked'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        // method 'on_pushButton_9_clicked'
         QtPrivate::TypeAndForceComplete<void, std::false_type>
     >,
     nullptr
@@ -237,11 +247,16 @@ void Dialog::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void
         case 15: { QChartView* _r = _t->createStationConsumptionChart();
             if (_a[0]) *reinterpret_cast< QChartView**>(_a[0]) = std::move(_r); }  break;
 
-        case 20: _t->onFilterRoleChanged((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
-        case 21: _t->on_b13_clicked(); break;
+        case 17: _t->on_pushButton_11_clicked(); break;
+        case 18: _t->on_pushButton_7_clicked(); break;
+        case 19: _t->on_pushButton_10_clicked(); break;
+        case 20: _t->on_pushButton_8_clicked(); break;
+        case 21: _t->onFilterRoleChanged((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
+        case 22: _t->on_b13_clicked(); break;
 
-        case 23: _t->on_b12_clicked(); break;
-        case 24: _t->on_pushButton_2_clicked(); break;
+        case 24: _t->on_b12_clicked(); break;
+        case 25: _t->on_pushButton_2_clicked(); break;
+        case 26: _t->on_pushButton_9_clicked(); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -275,13 +290,13 @@ int Dialog::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 25)
+        if (_id < 27)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 25;
+        _id -= 27;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 25)
+        if (_id < 27)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 25;
+        _id -= 27;
     }
     return _id;
 }

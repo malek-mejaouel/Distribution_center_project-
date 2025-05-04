@@ -209,7 +209,7 @@ public:
         page_2->setObjectName("page_2");
         widget_2 = new QWidget(page_2);
         widget_2->setObjectName("widget_2");
-        widget_2->setGeometry(QRect(490, 20, 331, 571));
+        widget_2->setGeometry(QRect(470, 20, 351, 571));
         widget_2->setStyleSheet(QString::fromUtf8("background-color: #D3D3D3; border-radius: 15px;"));
         label_7 = new QLabel(widget_2);
         label_7->setObjectName("label_7");

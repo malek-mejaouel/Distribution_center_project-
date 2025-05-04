@@ -203,7 +203,7 @@ public:
         pushButton_17->setIcon(icon6);
         label_8 = new QLabel(verticalWidget);
         label_8->setObjectName("label_8");
-        label_8->setGeometry(QRect(0, -10, 201, 191));
+        label_8->setGeometry(QRect(0, 30, 201, 111));
         label_8->setStyleSheet(QString::fromUtf8("image: url(:/new/prefix1/Ressources/e0ff5635-a1d6-406a-ae4c-6240633d745e.png);\n"
 "background:transparent;"));
         stackedWidget = new QStackedWidget(Dialog);
@@ -403,7 +403,7 @@ public:
 "    color: #1E2350;"));
         Userset = new QLineEdit(widget);
         Userset->setObjectName("Userset");
-        Userset->setGeometry(QRect(170, 120, 271, 31));
+        Userset->setGeometry(QRect(180, 110, 271, 41));
         Userset->setStyleSheet(QString::fromUtf8(" background-color: #FFFFFF;\n"
 "    border: 2px solid #C0E8E0;\n"
 "    border-radius: 8px;\n"
@@ -413,7 +413,7 @@ public:
         Userset->setCursorMoveStyle(Qt::CursorMoveStyle::LogicalMoveStyle);
         Passset = new QLineEdit(widget);
         Passset->setObjectName("Passset");
-        Passset->setGeometry(QRect(170, 190, 271, 31));
+        Passset->setGeometry(QRect(180, 180, 271, 41));
         Passset->setStyleSheet(QString::fromUtf8(" background-color: #FFFFFF;\n"
 "    border: 2px solid #C0E8E0;\n"
 "    border-radius: 8px;\n"
@@ -423,7 +423,7 @@ public:
         Passset->setCursorMoveStyle(Qt::CursorMoveStyle::LogicalMoveStyle);
         Number = new QLineEdit(widget);
         Number->setObjectName("Number");
-        Number->setGeometry(QRect(170, 260, 271, 31));
+        Number->setGeometry(QRect(180, 250, 271, 41));
         Number->setStyleSheet(QString::fromUtf8(" background-color: #FFFFFF;\n"
 "    border: 2px solid #C0E8E0;\n"
 "    border-radius: 8px;\n"
@@ -433,7 +433,7 @@ public:
         Number->setCursorMoveStyle(Qt::CursorMoveStyle::LogicalMoveStyle);
         widget_2 = new QWidget(widget);
         widget_2->setObjectName("widget_2");
-        widget_2->setGeometry(QRect(180, 320, 351, 91));
+        widget_2->setGeometry(QRect(180, 320, 391, 91));
         widget_2->setStyleSheet(QString::fromUtf8(" background-color: #FFFFFF;\n"
 "    border: 2px solid #C0E8E0;\n"
 "    border-radius: 8px;\n"
@@ -442,7 +442,7 @@ public:
 "    color: #1E2350;"));
         r3 = new QRadioButton(widget_2);
         r3->setObjectName("r3");
-        r3->setGeometry(QRect(240, 10, 101, 31));
+        r3->setGeometry(QRect(260, 10, 121, 31));
         QFont font1;
         font1.setFamilies({QString::fromUtf8("Segoe UI")});
         font1.setBold(true);
@@ -456,7 +456,7 @@ public:
 "    color: #1E2350;"));
         r6 = new QRadioButton(widget_2);
         r6->setObjectName("r6");
-        r6->setGeometry(QRect(240, 50, 101, 31));
+        r6->setGeometry(QRect(260, 50, 121, 31));
         r6->setFont(font1);
         r6->setStyleSheet(QString::fromUtf8(" background-color: #FFFFFF;\n"
 "    border: 2px solid #C0E8E0;\n"
@@ -466,7 +466,7 @@ public:
 "    color: #1E2350;"));
         r2 = new QRadioButton(widget_2);
         r2->setObjectName("r2");
-        r2->setGeometry(QRect(120, 10, 101, 31));
+        r2->setGeometry(QRect(120, 10, 121, 31));
         r2->setFont(font1);
         r2->setStyleSheet(QString::fromUtf8(" background-color: #FFFFFF;\n"
 "    border: 2px solid #C0E8E0;\n"
@@ -476,7 +476,7 @@ public:
 "    color: #1E2350;"));
         r5 = new QRadioButton(widget_2);
         r5->setObjectName("r5");
-        r5->setGeometry(QRect(120, 50, 101, 31));
+        r5->setGeometry(QRect(120, 50, 121, 31));
         r5->setFont(font1);
         r5->setStyleSheet(QString::fromUtf8(" background-color: #FFFFFF;\n"
 "    border: 2px solid #C0E8E0;\n"
@@ -583,7 +583,7 @@ public:
         retranslateUi(Dialog);
 
         stackedWidget->setCurrentIndex(0);
-        tabWidget->setCurrentIndex(0);
+        tabWidget->setCurrentIndex(1);
 
 
         QMetaObject::connectSlotsByName(Dialog);
@@ -593,10 +593,10 @@ public:
     {
         Dialog->setWindowTitle(QCoreApplication::translate("Dialog", "Dialog", nullptr));
         pushButton->setText(QCoreApplication::translate("Dialog", "Employee", nullptr));
-        pushButton_2->setText(QCoreApplication::translate("Dialog", "Equipement", nullptr));
-        pushButton_3->setText(QCoreApplication::translate("Dialog", "Examen", nullptr));
-        pushButton_4->setText(QCoreApplication::translate("Dialog", "Institut", nullptr));
-        pushButton_9->setText(QCoreApplication::translate("Dialog", "Livreur", nullptr));
+        pushButton_2->setText(QCoreApplication::translate("Dialog", "Equipment", nullptr));
+        pushButton_3->setText(QCoreApplication::translate("Dialog", "Exam", nullptr));
+        pushButton_4->setText(QCoreApplication::translate("Dialog", "Institute", nullptr));
+        pushButton_9->setText(QCoreApplication::translate("Dialog", "Delivery", nullptr));
         pushButton_10->setText(QCoreApplication::translate("Dialog", "Box", nullptr));
         pushButton_13->setText(QCoreApplication::translate("Dialog", "Settings", nullptr));
         pushButton_17->setText(QCoreApplication::translate("Dialog", "Log-out", nullptr));
