@@ -1,17 +1,18 @@
-QT += core gui sql widgets network printsupport
+QT += core gui sql widgets network printsupport serialport
 QT += quick quickwidgets
 QT += charts
 QT += positioning location
 
+CONFIG += c++11
 CONFIG += c++17 qml_debug
 CONFIG += warn_on release
 
-QTPLUGIN += qsqlite
+
 
 # Sources
 SOURCES += \
+    arduino.cpp \
     connection.cpp \
-    dialog.cpp \
     main.cpp \
     mainwindow.cpp \
     institut.cpp \
@@ -19,15 +20,14 @@ SOURCES += \
 
 # Headers
 HEADERS += \
+    arduino.h \
     connection.h \
-    dialog.h \
     mainwindow.h \
     institut.h \
     markermodel.h
 
 # Forms
 FORMS += \
-    dialog.ui \
     mainwindow.ui
 
 # Resources

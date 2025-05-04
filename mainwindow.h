@@ -1,5 +1,6 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
+
 #include <QtCharts/QChartView>
 #include <QtCharts/QChart>
 #include <QtCharts/QBarSet>
@@ -14,6 +15,7 @@
 #include <QSystemTrayIcon>
 #include <QtQuickWidgets/QQuickWidget>
 #include "institut.h"
+#include "arduino.h"
 #include "markermodel.h"
 
 QT_BEGIN_NAMESPACE
@@ -29,6 +31,8 @@ public:
     ~MainWindow();
 
 private slots:
+    void onEmployeeTextChanged(const QString &text);
+    bool employeeExists(const QString &employeeId); // Déclaration unique
     void loadTableData();
     void updateTableData();
     void onTableRowClicked();
@@ -43,16 +47,13 @@ private slots:
     void afficherStatistiquesCapacite();
     void on_pdf_clicked();
     void on_noti_clicked();
-    void showNotificationDialogLayout();
-    void showNotificationInLayout(const QString &employeeId, const QString &message, const QString &institutName, const QString &institutId);
     void notifyUser(const QString &title, const QString &message, QSystemTrayIcon::MessageIcon icon = QSystemTrayIcon::Information);
-    bool employeeExists(const QString &employeeId);
     void on_map_clicked();
     void afficherIdsEmployes();
-    void loadEmployeeNames();
     void onGeoCodeReply(QNetworkReply* reply);
     void searchLocation(const QString &address);
-
+    void update_label();
+    void on_addButton_2_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -64,17 +65,19 @@ private:
     QDialog *mapDialog;
     QSystemTrayIcon *trayIcon;
     QNetworkAccessManager *networkManager; // Déclaration de networkManager
-
+    QSystemTrayIcon*trayicon;
     MarkerModel m_markerModel;
-
     void updateTableWithModel(QSqlQueryModel *model);
     void performSearch(const QString &text);
     void performSorting(const QString &order);
     bool isInstitutSelected();
     void searchInstitut(const QString &name);
-
+    void checkcommandelivre();
     double latitude;
     double longitude;
+    QByteArray data; // variable contenant les données reçues
+    Arduino A;
+    bool test;
 
 signals:
     void marqueurAjoute(double lat, double lon);

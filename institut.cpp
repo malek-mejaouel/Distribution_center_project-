@@ -113,10 +113,13 @@ bool Institut::ajouter() {
 
     if (!query.exec()) {
         qDebug() << "Erreur d'ajout:" << query.lastError().text();
+        qDebug() << "Requête SQL:" << query.lastQuery();
         return false;
     }
     return true;
 }
+
+
 
 bool Institut::modifier() {
     QSqlQuery query;
@@ -157,6 +160,7 @@ bool Institut::supprimer()
     }
     return true;
 }
+
 
 bool Institut::validerDonnees()
 {

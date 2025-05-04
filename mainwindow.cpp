@@ -18,7 +18,6 @@
 #include <QStandardPaths>
 #include <QCheckBox>
 #include <QUrlQuery>
-#include "dialog.h"
 #include <QtCharts/QChartView>
 #include <QtCharts/QBarSeries>
 #include <QtCharts/QBarSet>
@@ -27,6 +26,8 @@
 #include <QtCharts/QPieSeries>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include <QSystemTrayIcon>
+#define seuil 65
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -39,6 +40,7 @@ MainWindow::MainWindow(QWidget *parent)
     QStringList headers = {"ID", "Nom", "Adresse", "Responsable", "Téléphone", "Email", "Capacité", "ID Employee"};
     ui->tab1->setColumnCount(headers.size());
     ui->tab1->setHorizontalHeaderLabels(headers);
+    afficherStatistiquesCapacite();
 
     // Add a central layout manually
     QVBoxLayout *centralLayout = new QVBoxLayout(ui->centralwidget);
@@ -46,7 +48,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->centralwidget->setLayout(centralLayout);
 
     loadTableData();
-    loadEmployeeNames(); // Charger les noms des employés
     afficherIdsEmployes();
 
     timer = new QTimer(this);
@@ -67,23 +68,33 @@ MainWindow::MainWindow(QWidget *parent)
             this, &MainWindow::onTriComboBoxChanged);
     connect(ui->ASC, &QPushButton::clicked, this, &MainWindow::onCroissantButtonClicked);
     connect(ui->DESC, &QPushButton::clicked, this, &MainWindow::onDecroissantButtonClicked);
-
-    // Connexion des signaux et slots
-    connect(ui->map, &QPushButton::clicked, this, &MainWindow::on_map_clicked);
-    connect(ui->tri, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &MainWindow::onTriComboBoxChanged);
-    connect(ui->ASC, &QPushButton::clicked, this, &MainWindow::onCroissantButtonClicked);
-    connect(ui->DESC, &QPushButton::clicked, this, &MainWindow::onDecroissantButtonClicked);
     connect(ui->recherche, &QLineEdit::textChanged, this, &MainWindow::onRechercheIdTextChanged);
-    connect(ui->stat, &QPushButton::clicked, this, &MainWindow::afficherStatistiquesCapacite);
+
     connect(ui->tab1, &QTableWidget::itemSelectionChanged, this, &MainWindow::onTableRowClicked);
     connect(ui->noti, &QPushButton::clicked, this, &MainWindow::on_noti_clicked);
     connect(ui->pdf, &QPushButton::clicked, this, &MainWindow::on_pdf_clicked);
+    connect(ui->employee, &QLineEdit::textChanged, this, &MainWindow::onEmployeeTextChanged);
+    connect(ui->b1, &QPushButton::clicked, this, &MainWindow::on_b1_clicked);
 
     ui->map->setIcon(QIcon(":/ressources/maps.png"));
-    ui->stat->setIcon(QIcon(":/ressources/stat.jpg"));
+
     ui->noti->setIcon(QIcon(":/ressources/noti.png"));
 
     updateTableData();
+    trayicon=new QSystemTrayIcon(this);
+    trayicon->setIcon(QIcon(":/ressources/box-3-48.png"));
+    trayicon->show();
+    trayicon->setToolTip("instituts ");
+
+    int ret=A.connect_arduino(); // lancer la connexion à arduino
+    switch(ret){
+    case(0):qDebug()<< "arduino is available and connected to : "<< A.getarduino_port_name();
+        break;
+    case(1):qDebug() << "arduino is available but not connected to :" <<A.getarduino_port_name();
+        break;
+    case(-1):qDebug() << "arduino is not available";
+    }
+    QObject::connect(A.getserial(),SIGNAL(readyRead()),this,SLOT(update_label()));
 }
 
 MainWindow::~MainWindow()
@@ -91,40 +102,53 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::update_label()
+{
+    QByteArray data2=A.read_from_arduino().trimmed();
+    if(data.length()==1 || (data2.length()==1 && data.length()!=3 && data2.toInt()<3) )data+=data2;
+    else if(!(data.length()==3 && data2.length()==1))    data=data2;
+    data=data.trimmed();
+    if(data2.length()==0)A.write_to_arduino("1");
+
+    qDebug()<<"data"<<data.trimmed();
+    qDebug()<<"data 2"<<data2.trimmed();
+
+    if(data.length()>1 && data.length()<=3){
+        ui->label_5->setText(data.trimmed());
+
+        if(data.toInt()>seuil && ui->lineEdit_9->text().length()!=0){
+            QSqlQuery query;
+            query.prepare("UPDATE INSTITUTS SET "
+                          "CAPACITE_INST =CAPACITE_INST-1  "
+                          "WHERE ID_INST = :id");
+            query.bindValue(":id", ui->lineEdit_9->text());
+            query.exec();
+
+            ui->label_55->setText(data.trimmed());
+            loadTableData();
+        }
+    }
+}
+
+void MainWindow::on_addButton_2_clicked()
+{
+    QSqlQuery query;
+    query.prepare("select * from INSTITUTS WHERE ID_INST=:id");
+    query.bindValue(":id",ui->lineEdit_9->text());
+
+    query.exec();
+    if(query.next()){
+        A.write_to_arduino("1");}
+    else{ A.write_to_arduino("2");
+        ui->label_55->setText("id non trouve");}
+}
+
 void MainWindow::loadTableData()
 {
-    qDebug() << "Début de loadTableData()";
-
     Institut institut;
     QSqlQueryModel *model = institut.afficher();
-    if (!model) {
-        qDebug() << "Erreur: modèle non créé";
-        return;
-    }
-
-    ui->tab1->clearContents();
-    ui->tab1->setRowCount(0);
-
-    qDebug() << "Nombre de lignes dans le modèle:" << model->rowCount();
-
-    int row = 0;
-    while (model->canFetchMore()) {
-        model->fetchMore();
-    }
-
-    for (int i = 0; i < model->rowCount(); ++i) {
-        ui->tab1->insertRow(row);
-        for (int col = 0; col < model->columnCount(); col++) {
-            QVariant data = model->data(model->index(i, col));
-            qDebug() << "Ligne" << i << "Colonne" << col << ":" << data.toString();
-            ui->tab1->setItem(row, col, new QTableWidgetItem(data.toString()));
-        }
-        row++;
-    }
-    ui->tab1->resizeColumnsToContents();
-    delete model; // Libérer la mémoire
-
-    qDebug() << "Fin de loadTableData()";
+    updateTableWithModel(model);
+    afficherStatistiquesCapacite();
 }
 
 void MainWindow::updateTableData()
@@ -148,28 +172,36 @@ void MainWindow::onTableRowClicked()
         ui->telephoneInst_input->setText(ui->tab1->item(row, 4)->text());
         ui->emailInst_input->setText(ui->tab1->item(row, 5)->text());
         ui->capaciteInst_input->setText(ui->tab1->item(row, 6)->text());
-
-        // Gestion du QComboBox employee
-        QTableWidgetItem* employeeItem = ui->tab1->item(row, 7);
-        if (employeeItem) {
-            QString idStr = employeeItem->text();
-            bool ok;
-            int employeeId = idStr.toInt(&ok);
-
-            if (ok && employeeId > 0) {
-                qDebug() << "Recherche de l'employé ID:" << employeeId;
-                for (int i = 0; i < ui->employee->count(); ++i) {
-                    if (ui->employee->itemData(i).toInt() == employeeId) {
-                        ui->employee->setCurrentIndex(i);
-                        qDebug() << "Employé trouvé à l'index:" << i;
-                        return;
-                    }
-                }
-                qDebug() << "Employé non trouvé dans la liste";
-            }
-        }
-        ui->employee->setCurrentIndex(0); // Fallback
+        ui->employee->setText(ui->tab1->item(row, 7)->text());
     }
+}
+
+void MainWindow::onEmployeeTextChanged(const QString &text)
+{
+    if (text.isEmpty()) {
+        // Si le champ est vide, on ne fait rien
+        return;
+    }
+
+    if (!employeeExists(text)) {
+        // Afficher une alerte si l'ID de l'employé n'existe pas
+        QMessageBox::warning(this, "Erreur", "L'ID de l'employé n'existe pas dans la base de données.");
+        // Vous pouvez également réinitialiser le champ ou prendre une autre action
+        ui->employee->clear();
+    }
+}
+
+bool MainWindow::employeeExists(const QString &employeeId)
+{
+    QSqlQuery query;
+    query.prepare("SELECT COUNT(*) FROM employees WHERE ID_EMPLOYE = :id");
+    query.bindValue(":id", employeeId);
+
+    if (query.exec() && query.next()) {
+        int count = query.value(0).toInt();
+        return count > 0;
+    }
+    return false;
 }
 
 void MainWindow::on_b2_clicked()
@@ -180,26 +212,7 @@ void MainWindow::on_b2_clicked()
     ui->telephoneInst_input->clear();
     ui->emailInst_input->clear();
     ui->capaciteInst_input->clear();
-}
-
-void MainWindow::loadEmployeeNames()
-{
     ui->employee->clear();
-    ui->employee->addItem("Sélectionnez un employé", -1);
-
-    QSqlQuery query("SELECT ID_EMPLOYE, NOM_EMPLOYE FROM EMPLOYEES ORDER BY NOM_EMPLOYE");
-    if (!query.exec()) {
-        qDebug() << "Erreur SQL (loadEmployeeNames):" << query.lastError().text();
-        return;
-    }
-
-    while (query.next()) {
-        int id = query.value("ID_EMPLOYE").toInt();
-        QString name = query.value("NOM_EMPLOYE").toString();
-        ui->employee->addItem(name, id);
-        qDebug() << "Employé ajouté:" << name << "(ID:" << id << ")";
-    }
-    ui->employee->setCurrentIndex(0);
 }
 
 void MainWindow::on_b1_clicked()
@@ -211,23 +224,22 @@ void MainWindow::on_b1_clicked()
     institut.setTelephone(ui->telephoneInst_input->text().toInt());
     institut.setEmail(ui->emailInst_input->text());
     institut.setCapacite(ui->capaciteInst_input->text().toInt());
-
-    int idEmploye = ui->employee->currentData().toInt();
-    if (idEmploye <= 0) {
-        QMessageBox::warning(this, "Erreur", "Veuillez sélectionner un employé valide");
-        return;
-    }
-    institut.setIdEmployee(idEmploye);
+    institut.setIdEmployee(ui->employee->text().toInt());
 
     // Vérification des données avant d'essayer l'ajout
-    if (!institut.validerDonnees()) {
-        QMessageBox::critical(this, "Erreur", "Les données saisies ne sont pas valides !");
+    QString erreur;
+    if (!institut.validerDonnees(erreur)) {
+        qDebug() << "Erreur de validation des données:" << erreur;
+        QMessageBox::critical(this, "Erreur", "Les données saisies ne sont pas valides !\n" + erreur);
         return;  // Stopper l'exécution ici si validation échoue
     }
 
     if (institut.ajouter()) {
         QMessageBox::information(this, "Succès", "Institut ajouté !");
         loadTableData(); // Recharge les données
+    } else {
+        qDebug() << "Échec de l'ajout de l'institut.";
+        QMessageBox::critical(this, "Erreur", "Échec de l'ajout de l'institut.");
     }
 }
 
@@ -247,7 +259,7 @@ void MainWindow::on_b3_clicked()
     institut.setEmail(ui->emailInst_input->text());
     institut.setCapacite(ui->capaciteInst_input->text().toInt());
 
-    int idEmploye = ui->employee->currentData().toInt();
+    int idEmploye = ui->employee->text().toInt();
     institut.setIdEmployee(idEmploye);
 
     if (institut.modifier()) {
@@ -258,25 +270,42 @@ void MainWindow::on_b3_clicked()
 
 void MainWindow::on_b4_clicked()
 {
-    if (selectedInstitutId == "-1") {
-        QMessageBox::warning(this, "Erreur", "Aucun institut sélectionné.");
+    if (selectedInstitutId == "-1" || selectedInstitutId.isEmpty()) {
+        QMessageBox::warning(this, "Erreur", "Veuillez sélectionner un institut à supprimer.");
         return;
     }
 
-    Institut institut;
-    institut.setId(selectedInstitutId.toInt());
-
     QMessageBox::StandardButton reply;
-    reply = QMessageBox::question(this, "Confirmation", "Êtes-vous sûr de vouloir supprimer cet institut ?",
-                                  QMessageBox::Yes | QMessageBox::No);
+    reply = QMessageBox::question(this, "Confirmation de suppression",
+                                "Êtes-vous sûr de vouloir supprimer cet institut ?\n"
+                                "Cette action est irréversible.",
+                                QMessageBox::Yes | QMessageBox::No);
 
     if (reply == QMessageBox::Yes) {
-        bool success = institut.supprimer();
-        if (success) {
-            QMessageBox::information(this, "Succès", "Institut supprimé !");
+        Institut institut;
+        institut.setId(selectedInstitutId.toInt());
+
+        if (institut.supprimer()) {
+            QMessageBox::information(this, "Succès", "L'institut a été supprimé avec succès.");
+            
+            // Réinitialiser les champs
+            ui->nomInst_input->clear();
+            ui->adresseInst_input->clear();
+            ui->responsableInst_input->clear();
+            ui->telephoneInst_input->clear();
+            ui->emailInst_input->clear();
+            ui->capaciteInst_input->clear();
+            ui->employee->clear();
+            
+            // Réinitialiser l'ID sélectionné
+            selectedInstitutId = "-1";
+            
+            // Rafraîchir la table
             loadTableData();
         } else {
-            QMessageBox::critical(this, "Erreur", "Échec de la suppression.");
+            QMessageBox::critical(this, "Erreur", "Échec de la suppression de l'institut.\n"
+                                "Veuillez vérifier que l'institut existe toujours dans la base de données.");
+            qDebug() << "Échec de la suppression de l'institut avec l'ID :" << selectedInstitutId;
         }
     }
 }
@@ -401,16 +430,8 @@ void MainWindow::performSearch(const QString &text)
 
 void MainWindow::afficherStatistiquesCapacite()
 {
-    QDialog *dialog = new QDialog(this);
-    dialog->setWindowTitle("Statistiques des Capacités des Instituts");
-    dialog->resize(1100, 800);
-    dialog->setStyleSheet("background-color: #2c3e50; color: white;");
+    qDebug() << "Setting up chart...";
 
-    QVBoxLayout *mainLayout = new QVBoxLayout(dialog);
-    mainLayout->setSpacing(20);
-    mainLayout->setContentsMargins(20, 20, 20, 20);
-
-    // Intervalles
     QStringList intervals = {"0-500 places", "501-1000 places", "1001+ places"};
     int intervalCounts[3] = {0, 0, 0};
     int totalInstituts = 0;
@@ -434,7 +455,6 @@ void MainWindow::afficherStatistiquesCapacite()
         }
     }
 
-    // Créer le graphique
     QChart *barChart = new QChart();
     barChart->setTitle("<b style='color:white; font-size:16px;'>Répartition des Instituts par Capacité</b>");
     barChart->setAnimationOptions(QChart::AllAnimations);
@@ -442,31 +462,30 @@ void MainWindow::afficherStatistiquesCapacite()
     barChart->setTitleBrush(QBrush(Qt::white));
     barChart->setMargins(QMargins(15, 15, 15, 15));
 
+    // Créer un QBarSet par intervalle avec 3 valeurs (uniquement la position pertinente remplie)
+    QBarSet *set0_500 = new QBarSet("0-500 places");
+    QBarSet *set501_1000 = new QBarSet("501-1000 places");
+    QBarSet *set1001Plus = new QBarSet("1001+ places");
+
+    *set0_500 << intervalCounts[0] << 0 << 0; // Seule la première catégorie a une valeur
+    *set501_1000 << 0 << intervalCounts[1] << 0; // Seule la deuxième catégorie a une valeur
+    *set1001Plus << 0 << 0 << intervalCounts[2]; // Seule la troisième catégorie a une valeur
+
+    set0_500->setColor(QColor("#3498db"));
+    set501_1000->setColor(QColor("#2ecc71"));
+    set1001Plus->setColor(QColor("#e74c3c"));
+
     QBarSeries *barSeries = new QBarSeries();
-    QBarSet *barSet = new QBarSet("Instituts");
-
-    for (int i = 0; i < 3; ++i) {
-        *barSet << intervalCounts[i];
-    }
-
-    // Style des barres
-    QLinearGradient barGradient(0, 0, 0, 1);
-    barGradient.setColorAt(0, QColor("#3498db"));
-    barGradient.setColorAt(1, QColor("#2980b9"));
-    barGradient.setCoordinateMode(QGradient::ObjectBoundingMode);
-    barSet->setBrush(barGradient);
-    barSet->setBorderColor(QColor("#2c3e50"));
-
-    barSeries->append(barSet);
-    barSeries->setLabelsVisible(false); // Nous ajouterons manuellement nos labels
+    barSeries->append(set0_500);
+    barSeries->append(set501_1000);
+    barSeries->append(set1001Plus);
 
     barChart->addSeries(barSeries);
 
-    // Axe X
+    // Axe X avec les trois catégories
     QBarCategoryAxis *axisX = new QBarCategoryAxis();
     axisX->append(intervals);
     axisX->setLabelsColor(Qt::white);
-    axisX->setTitleBrush(QBrush(Qt::white));
     barChart->addAxis(axisX, Qt::AlignBottom);
     barSeries->attachAxis(axisX);
 
@@ -476,80 +495,44 @@ void MainWindow::afficherStatistiquesCapacite()
     axisY->setRange(0, maxValue);
     axisY->setLabelsColor(Qt::white);
     axisY->setGridLineColor(QColor("#3d566e"));
-    axisY->setLinePenColor(Qt::white);
-    axisY->setTitleText("Nombre d'Instituts");
-    axisY->setTitleBrush(QBrush(Qt::white));
     barChart->addAxis(axisY, Qt::AlignLeft);
     barSeries->attachAxis(axisY);
 
-    // Légende
     barChart->legend()->setVisible(true);
     barChart->legend()->setLabelColor(Qt::white);
-    barChart->legend()->setAlignment(Qt::AlignBottom);
-    barChart->legend()->setFont(QFont("Segoe UI", 9));
 
     QChartView *barChartView = new QChartView(barChart);
     barChartView->setRenderHint(QPainter::Antialiasing);
-    mainLayout->addWidget(barChartView);
+    ui->chartViewFunctionalites->setChart(barChart);
 
-    // Bouton de fermeture
-    QPushButton *closeButton = new QPushButton("Fermer");
-    closeButton->setStyleSheet(R"(
-        QPushButton {
-            background-color: #e74c3c;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            font-family: 'Segoe UI';
-            font-size: 12px;
-            font-weight: bold;
-            min-width: 100px;
-        }
-        QPushButton:hover {
-            background-color: #c0392b;
-        }
-    )");
-    connect(closeButton, &QPushButton::clicked, dialog, &QDialog::accept);
-
-    QHBoxLayout *buttonLayout = new QHBoxLayout();
-    buttonLayout->addStretch();
-    buttonLayout->addWidget(closeButton);
-    buttonLayout->addStretch();
-    mainLayout->addLayout(buttonLayout);
-
-    dialog->setLayout(mainLayout);
-    dialog->show();
-
-    // Ajouter les textes personnalisés au-dessus de chaque barre
-    QTimer::singleShot(0, dialog, [=]() {
+    // Ajuster la position des étiquettes
+    QTimer::singleShot(0, this, [=]() {
         for (int i = 0; i < 3; ++i) {
             if (intervalCounts[i] == 0) continue;
 
-            double pourcentage = totalInstituts > 0 ? (static_cast<double>(intervalCounts[i]) / totalInstituts * 100.0) : 0.0;
+            double pourcentage = (static_cast<double>(intervalCounts[i]) / totalInstituts) * 100.0;
             QString labelText = QString("%1%\n%2 instituts\n%3 places")
                                     .arg(pourcentage, 0, 'f', 1)
                                     .arg(intervalCounts[i])
                                     .arg(totalPlaces[i]);
 
-            // Position logique au centre de la barre
+            // Calculer la position en tenant compte du groupe
             QPointF barCenter(i, intervalCounts[i]);
             QPointF scenePos = barChart->mapToPosition(barCenter, barSeries);
 
-            // Créer le texte
+            // Ajustement manuel pour centrer l'étiquette sur la barre
+            // (dépend de la largeur des barres, ajustez selon vos besoins)
+            qreal xOffset = -30 + i * 60; // Ajustement empirique
             QGraphicsTextItem *textItem = new QGraphicsTextItem(labelText);
             textItem->setDefaultTextColor(Qt::white);
             textItem->setFont(QFont("Segoe UI", 9, QFont::Bold));
-            textItem->setZValue(10);
-            textItem->setTextWidth(120);
-            textItem->setPos(scenePos.x() - 60, scenePos.y() - 60);  // Ajuster position
-            textItem->setTextWidth(120);
-
+            textItem->setPos(scenePos.x() + xOffset, scenePos.y() - 50);
             barChart->scene()->addItem(textItem);
         }
     });
-}
 
+    qDebug() << "Chart setup complete.";
+}
 void MainWindow::on_pdf_clicked()
 {
     qDebug() << "📄 Bouton PDF cliqué !";
@@ -607,144 +590,16 @@ void MainWindow::afficherIdsEmployes()
     }
 }
 
-void MainWindow::showNotificationInLayout(const QString &employeeId, const QString &message, const QString &institutName, const QString &institutId)
-{
-    if (!employeeExists(employeeId)) {
-        QMessageBox::warning(this, "Erreur", "L'employé avec l'ID " + employeeId + " n'existe pas.");
-        return;
-    }
-
-    QString currentDate = QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss");
-    QString fullMessage = QString("Date: %1\n %2 à l'institut %3 (ID: %4)")
-                              .arg(currentDate)
-                              .arg(message)
-                              .arg(institutName)
-                              .arg(institutId);
-
-    Dialog *notificationDialog = new Dialog(employeeId, fullMessage, this);
-    notificationDialog->show();
-}
-
 void MainWindow::on_noti_clicked()
 {
-    if (selectedInstitutId == "-1") {
-        QMessageBox::warning(this, "Erreur", "Aucun institut sélectionné.");
-        return;
-    }
+    int id = ui->notifylineedit->text().toInt();
 
-    showNotificationDialogLayout();
-}
-
-void MainWindow::showNotificationDialogLayout()
-{
-    QDialog dialog(this);
-    dialog.setWindowTitle("Envoyer une Notification");
-    dialog.setMinimumSize(400, 300);
-    dialog.setStyleSheet("background-color: #2c3e50; color: white;");
-
-    QVBoxLayout* layout = new QVBoxLayout(&dialog);
-
-    QLabel* labelIdEmploye = new QLabel("ID de l'employé :", &dialog);
-    labelIdEmploye->setStyleSheet("color: white; font-size: 14px;");
-    layout->addWidget(labelIdEmploye);
-
-    QLineEdit* lineEditIdEmploye = new QLineEdit(&dialog);
-    lineEditIdEmploye->setPlaceholderText("Entrez l'ID de l'employé");
-    lineEditIdEmploye->setStyleSheet("background-color: white; color: black; padding: 5px; border-radius: 5px;");
-    layout->addWidget(lineEditIdEmploye);
-
-    QCheckBox *checkBoxCommandeArrivee = new QCheckBox("Commande arrivée", &dialog);
-    checkBoxCommandeArrivee->setStyleSheet("color: white; font-size: 14px;");
-    layout->addWidget(checkBoxCommandeArrivee);
-
-    QCheckBox* checkBoxCommandeNonArrivee = new QCheckBox("Commande non arrivée", &dialog);
-    checkBoxCommandeNonArrivee->setStyleSheet("color: white; font-size: 14px;");
-    layout->addWidget(checkBoxCommandeNonArrivee);
-
-    // Empêcher de cocher les deux cases
-    connect(checkBoxCommandeArrivee, &QCheckBox::stateChanged, [=](int state) {
-        if (state == Qt::Checked) {
-            checkBoxCommandeNonArrivee->setChecked(false);
-        }
-    });
-
-    connect(checkBoxCommandeNonArrivee, &QCheckBox::stateChanged, [=](int state) {
-        if (state == Qt::Checked) {
-            checkBoxCommandeArrivee->setChecked(false);
-        }
-    });
-
-    QHBoxLayout* buttonLayout = new QHBoxLayout();
-    QPushButton* okButton = new QPushButton("Envoyer", &dialog);
-    QPushButton* cancelButton = new QPushButton("Annuler", &dialog);
-
-    okButton->setStyleSheet(R"(
-        QPushButton {
-            background-color: #2ecc71;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            font-family: 'Segoe UI';
-            font-size: 12px;
-            font-weight: bold;
-            min-width: 100px;
-        }
-        QPushButton:hover {
-            background-color: #27ae60;
-        }
-    )");
-
-    cancelButton->setStyleSheet(R"(
-        QPushButton {
-            background-color: #e74c3c;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            font-family: 'Segoe UI';
-            font-size: 12px;
-            font-weight: bold;
-            min-width: 100px;
-        }
-        QPushButton:hover {
-            background-color: #c0392b;
-        }
-    )");
-
-    buttonLayout->addWidget(okButton);
-    buttonLayout->addWidget(cancelButton);
-    layout->addLayout(buttonLayout);
-
-    connect(okButton, &QPushButton::clicked, [&]() {
-        QString idEmployeText = lineEditIdEmploye->text();
-        bool idEmployeValid = !idEmployeText.isEmpty();
-        bool commandeArriveeChecked = checkBoxCommandeArrivee->isChecked();
-        bool commandeNonArriveeChecked = checkBoxCommandeNonArrivee->isChecked();
-
-        if (!idEmployeValid) {
-            QMessageBox::warning(&dialog, "Erreur", "Veuillez entrer l'ID de l'employé.");
-            return;
-        }
-
-        if (!commandeArriveeChecked && !commandeNonArriveeChecked) {
-            QMessageBox::warning(&dialog, "Erreur", "Veuillez sélectionner une option de commande.");
-            return;
-        }
-
-        QString message = commandeArriveeChecked ? "Commande arrivée" : "Commande non arrivée";
-        QString institutName = ui->nomInst_input->text();
-        QString institutId = selectedInstitutId;
-
-        // Afficher la notification dans l'interface
-        showNotificationInLayout(idEmployeText, message, institutName, institutId);
-
-        dialog.accept();
-    });
-
-    connect(cancelButton, &QPushButton::clicked, &dialog, &QDialog::reject);
-
-    dialog.exec();
+    trayicon->showMessage(
+        "Alerte Livraison",
+        QString("Dear employee %1, your box was successfully delivered.").arg(id),
+        QSystemTrayIcon::Warning,
+        10000
+        );
 }
 
 void MainWindow::notifyUser(const QString &title, const QString &message, QSystemTrayIcon::MessageIcon icon)
@@ -752,19 +607,6 @@ void MainWindow::notifyUser(const QString &title, const QString &message, QSyste
     if (trayIcon) {
         trayIcon->showMessage(title, message, icon, 5000);
     }
-}
-
-bool MainWindow::employeeExists(const QString &employeeId)
-{
-    QSqlQuery query;
-    query.prepare("SELECT COUNT(*) FROM EMPLOYEES WHERE ID_EMPLOYE = :id");
-    query.bindValue(":id", employeeId);
-
-    if (query.exec() && query.next()) {
-        int count = query.value(0).toInt();
-        return count > 0;
-    }
-    return false;
 }
 
 void MainWindow::onGeoCodeReply(QNetworkReply *reply)
@@ -888,6 +730,7 @@ void MainWindow::searchInstitut(const QString &name)
         request.setAttribute(QNetworkRequest::User, nomInstitut);
 
         networkManager->get(request);
+
     } else {
         qDebug() << "Aucun institut trouvé avec le nom :" << name;
     }
@@ -908,4 +751,9 @@ void MainWindow::on_map_clicked()
     m_markerModel.loadFromJson();
 
     mapDialog->exec();
+}
+
+void MainWindow::checkcommandelivre()
+{
+    // Implementation of checkcommandelivre
 }
