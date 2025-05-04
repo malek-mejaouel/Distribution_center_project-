@@ -24,7 +24,6 @@
 #include <QtWidgets/QSpinBox>
 #include <QtWidgets/QTabWidget>
 #include <QtWidgets/QTableView>
-#include <QtWidgets/QTableWidget>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -46,9 +45,8 @@ public:
     QWidget *horizontalWidget;
     QLineEdit *lineEdit_8;
     QLabel *label_8;
-    QTableWidget *tableWidget;
     QLabel *label_11;
-    QComboBox *comboBox;
+    QComboBox *comboBoxTri;
     QPushButton *pushButton_14;
     QPushButton *pushButton_15;
     QPushButton *pushButton_16;
@@ -56,6 +54,10 @@ public:
     QPushButton *pushButton_18;
     QPushButton *updateButton;
     QTableView *tableView;
+    QPushButton *updateButton_2;
+    QPushButton *updateButton_3;
+    QComboBox *comboBoxTri_2;
+    QPushButton *pushButton_6;
     QTabWidget *tabWidget;
     QWidget *widget;
     QGroupBox *horizontalGroupBox;
@@ -65,7 +67,6 @@ public:
     QLabel *label_7;
     QLineEdit *matiereExamenLineEdit;
     QPushButton *addButton;
-    QPushButton *pushButton_12;
     QLabel *label_10;
     QLabel *label_13;
     QDateEdit *dateExamenDateEdit;
@@ -73,7 +74,11 @@ public:
     QLabel *label_9;
     QSpinBox *niveauSpinBox;
     QLineEdit *dureeExamenLimeEdit;
+    QPushButton *pushButton_12;
+    QPushButton *refresh;
     QWidget *tab_6;
+    QWidget *tab;
+    QLabel *label_stat;
     QMenuBar *menubar;
 
     void setupUi(QMainWindow *MainWindow)
@@ -209,42 +214,6 @@ public:
 " font-size: 13px;\n"
 "    font-weight: bold;\n"
 "    font-family: \"Poppins\";"));
-        tableWidget = new QTableWidget(horizontalWidget);
-        if (tableWidget->columnCount() < 7)
-            tableWidget->setColumnCount(7);
-        QBrush brush(QColor(0, 0, 0, 255));
-        brush.setStyle(Qt::NoBrush);
-        QFont font1;
-        font1.setFamilies({QString::fromUtf8("Segoe UI")});
-        font1.setBold(true);
-        QTableWidgetItem *__qtablewidgetitem = new QTableWidgetItem();
-        __qtablewidgetitem->setFont(font1);
-        __qtablewidgetitem->setBackground(QColor(10, 21, 91));
-        __qtablewidgetitem->setForeground(brush);
-        tableWidget->setHorizontalHeaderItem(0, __qtablewidgetitem);
-        QTableWidgetItem *__qtablewidgetitem1 = new QTableWidgetItem();
-        __qtablewidgetitem1->setBackground(QColor(10, 21, 91));
-        tableWidget->setHorizontalHeaderItem(1, __qtablewidgetitem1);
-        QTableWidgetItem *__qtablewidgetitem2 = new QTableWidgetItem();
-        __qtablewidgetitem2->setBackground(QColor(10, 21, 91));
-        tableWidget->setHorizontalHeaderItem(2, __qtablewidgetitem2);
-        QTableWidgetItem *__qtablewidgetitem3 = new QTableWidgetItem();
-        __qtablewidgetitem3->setBackground(QColor(10, 21, 91));
-        tableWidget->setHorizontalHeaderItem(3, __qtablewidgetitem3);
-        QTableWidgetItem *__qtablewidgetitem4 = new QTableWidgetItem();
-        __qtablewidgetitem4->setBackground(QColor(10, 21, 91));
-        tableWidget->setHorizontalHeaderItem(4, __qtablewidgetitem4);
-        QTableWidgetItem *__qtablewidgetitem5 = new QTableWidgetItem();
-        __qtablewidgetitem5->setBackground(QColor(0, 0, 107));
-        tableWidget->setHorizontalHeaderItem(5, __qtablewidgetitem5);
-        QTableWidgetItem *__qtablewidgetitem6 = new QTableWidgetItem();
-        __qtablewidgetitem6->setBackground(QColor(0, 0, 90));
-        tableWidget->setHorizontalHeaderItem(6, __qtablewidgetitem6);
-        tableWidget->setObjectName("tableWidget");
-        tableWidget->setGeometry(QRect(10, 60, 581, 211));
-        tableWidget->setStyleSheet(QString::fromUtf8("background-color: rgb(157, 157, 157);\n"
-"background-color: rgb(14, 0, 214);\n"
-"background-color: rgb(179, 179, 179);"));
         label_11 = new QLabel(horizontalWidget);
         label_11->setObjectName("label_11");
         label_11->setGeometry(QRect(370, 30, 71, 21));
@@ -252,19 +221,20 @@ public:
 " font-size: 13px;\n"
 "    font-weight: bold;\n"
 "    font-family: \"Poppins\";"));
-        comboBox = new QComboBox(horizontalWidget);
-        comboBox->addItem(QString());
-        comboBox->addItem(QString());
-        comboBox->addItem(QString());
-        comboBox->setObjectName("comboBox");
-        comboBox->setGeometry(QRect(450, 30, 141, 24));
+        comboBoxTri = new QComboBox(horizontalWidget);
+        comboBoxTri->addItem(QString());
+        comboBoxTri->addItem(QString());
+        comboBoxTri->addItem(QString());
+        comboBoxTri->addItem(QString());
+        comboBoxTri->setObjectName("comboBoxTri");
+        comboBoxTri->setGeometry(QRect(450, 30, 141, 24));
         pushButton_14 = new QPushButton(horizontalWidget);
         pushButton_14->setObjectName("pushButton_14");
         pushButton_14->setGeometry(QRect(40, 310, 81, 31));
-        QFont font2;
-        font2.setFamilies({QString::fromUtf8("Tw Cen MT")});
-        font2.setBold(true);
-        pushButton_14->setFont(font2);
+        QFont font1;
+        font1.setFamilies({QString::fromUtf8("Tw Cen MT")});
+        font1.setBold(true);
+        pushButton_14->setFont(font1);
         pushButton_14->setStyleSheet(QString::fromUtf8("background-color: rgb(115, 115, 115);\n"
 "    color: #1E2350;\n"
 "    border-radius: 10px;\n"
@@ -273,7 +243,7 @@ public:
         pushButton_15 = new QPushButton(horizontalWidget);
         pushButton_15->setObjectName("pushButton_15");
         pushButton_15->setGeometry(QRect(410, 310, 81, 31));
-        pushButton_15->setFont(font2);
+        pushButton_15->setFont(font1);
         pushButton_15->setStyleSheet(QString::fromUtf8("background-color: rgb(115, 115, 115);\n"
 "    color: #1E2350;\n"
 "    border-radius: 10px;\n"
@@ -282,7 +252,7 @@ public:
         pushButton_16 = new QPushButton(horizontalWidget);
         pushButton_16->setObjectName("pushButton_16");
         pushButton_16->setGeometry(QRect(520, 310, 81, 31));
-        pushButton_16->setFont(font2);
+        pushButton_16->setFont(font1);
         pushButton_16->setStyleSheet(QString::fromUtf8("background-color: rgb(115, 115, 115);\n"
 "    color: #1E2350;\n"
 "    border-radius: 10px;\n"
@@ -296,8 +266,8 @@ public:
         pushButton_5->setIcon(icon8);
         pushButton_18 = new QPushButton(horizontalWidget);
         pushButton_18->setObjectName("pushButton_18");
-        pushButton_18->setGeometry(QRect(490, 220, 80, 31));
-        pushButton_18->setFont(font2);
+        pushButton_18->setGeometry(QRect(120, 220, 80, 31));
+        pushButton_18->setFont(font1);
         pushButton_18->setStyleSheet(QString::fromUtf8("  background-color: #FFFFFF;\n"
 "    color: #1E2350;\n"
 "    border-radius: 10px;\n"
@@ -305,8 +275,8 @@ public:
 "    padding: 8px;"));
         updateButton = new QPushButton(horizontalWidget);
         updateButton->setObjectName("updateButton");
-        updateButton->setGeometry(QRect(380, 220, 80, 31));
-        updateButton->setFont(font2);
+        updateButton->setGeometry(QRect(30, 220, 80, 31));
+        updateButton->setFont(font1);
         updateButton->setStyleSheet(QString::fromUtf8("  background-color: #FFFFFF;\n"
 "    color: #1E2350;\n"
 "    border-radius: 10px;\n"
@@ -315,11 +285,37 @@ public:
         tableView = new QTableView(horizontalWidget);
         tableView->setObjectName("tableView");
         tableView->setGeometry(QRect(30, 90, 541, 121));
+        updateButton_2 = new QPushButton(horizontalWidget);
+        updateButton_2->setObjectName("updateButton_2");
+        updateButton_2->setGeometry(QRect(450, 220, 121, 31));
+        updateButton_2->setFont(font1);
+        updateButton_2->setStyleSheet(QString::fromUtf8("  background-color: #FFFFFF;\n"
+"    color: #1E2350;\n"
+"    border-radius: 10px;\n"
+"    font-size: 14px;\n"
+"    padding: 8px;"));
+        updateButton_3 = new QPushButton(horizontalWidget);
+        updateButton_3->setObjectName("updateButton_3");
+        updateButton_3->setGeometry(QRect(210, 220, 131, 31));
+        updateButton_3->setFont(font1);
+        updateButton_3->setStyleSheet(QString::fromUtf8("  background-color: #FFFFFF;\n"
+"    color: #1E2350;\n"
+"    border-radius: 10px;\n"
+"    font-size: 14px;\n"
+"    padding: 8px;"));
+        comboBoxTri_2 = new QComboBox(horizontalWidget);
+        comboBoxTri_2->addItem(QString());
+        comboBoxTri_2->addItem(QString());
+        comboBoxTri_2->setObjectName("comboBoxTri_2");
+        comboBoxTri_2->setGeometry(QRect(450, 60, 141, 24));
+        pushButton_6 = new QPushButton(horizontalWidget);
+        pushButton_6->setObjectName("pushButton_6");
+        pushButton_6->setGeometry(QRect(380, 50, 51, 31));
+        pushButton_6->setIcon(icon8);
         lineEdit_8->raise();
         label_8->raise();
-        tableWidget->raise();
         label_11->raise();
-        comboBox->raise();
+        comboBoxTri->raise();
         pushButton_14->raise();
         pushButton_15->raise();
         pushButton_16->raise();
@@ -327,6 +323,10 @@ public:
         updateButton->raise();
         tableView->raise();
         pushButton_18->raise();
+        updateButton_2->raise();
+        updateButton_3->raise();
+        comboBoxTri_2->raise();
+        pushButton_6->raise();
         tabWidget = new QTabWidget(centralwidget);
         tabWidget->setObjectName("tabWidget");
         tabWidget->setGeometry(QRect(200, 0, 601, 301));
@@ -404,22 +404,13 @@ public:
         addButton = new QPushButton(horizontalGroupBox);
         addButton->setObjectName("addButton");
         addButton->setGeometry(QRect(390, 210, 80, 31));
-        QFont font3;
-        font3.setFamilies({QString::fromUtf8("Tw Cen MT")});
-        font3.setBold(true);
-        font3.setItalic(true);
-        addButton->setFont(font3);
+        QFont font2;
+        font2.setFamilies({QString::fromUtf8("Tw Cen MT")});
+        font2.setBold(true);
+        font2.setItalic(true);
+        addButton->setFont(font2);
         addButton->setStyleSheet(QString::fromUtf8("  background-color: #FFFFFF;\n"
 "  \n"
-"    color: #1E2350;\n"
-"    border-radius: 10px;\n"
-"    font-size: 14px;\n"
-"    padding: 8px;"));
-        pushButton_12 = new QPushButton(horizontalGroupBox);
-        pushButton_12->setObjectName("pushButton_12");
-        pushButton_12->setGeometry(QRect(490, 210, 80, 31));
-        pushButton_12->setFont(font2);
-        pushButton_12->setStyleSheet(QString::fromUtf8("  background-color: #FFFFFF;\n"
 "    color: #1E2350;\n"
 "    border-radius: 10px;\n"
 "    font-size: 14px;\n"
@@ -458,11 +449,23 @@ public:
         dureeExamenLimeEdit->setObjectName("dureeExamenLimeEdit");
         dureeExamenLimeEdit->setGeometry(QRect(160, 150, 141, 16));
         dureeExamenLimeEdit->setStyleSheet(QString::fromUtf8("background-color: rgb(255, 255, 255);"));
+        pushButton_12 = new QPushButton(horizontalGroupBox);
+        pushButton_12->setObjectName("pushButton_12");
+        pushButton_12->setGeometry(QRect(490, 210, 80, 31));
+        pushButton_12->setFont(font1);
+        pushButton_12->setStyleSheet(QString::fromUtf8("  background-color: #FFFFFF;\n"
+"    color: #1E2350;\n"
+"    border-radius: 10px;\n"
+"    font-size: 14px;\n"
+"    padding: 8px;"));
+        refresh = new QPushButton(horizontalGroupBox);
+        refresh->setObjectName("refresh");
+        refresh->setGeometry(QRect(550, 10, 51, 31));
+        refresh->setIcon(icon8);
         label_3->raise();
         label_4->raise();
         label_7->raise();
         addButton->raise();
-        pushButton_12->raise();
         nomExamenLineEdit->raise();
         matiereExamenLineEdit->raise();
         label_10->raise();
@@ -472,10 +475,18 @@ public:
         label_9->raise();
         niveauSpinBox->raise();
         dureeExamenLimeEdit->raise();
+        pushButton_12->raise();
+        refresh->raise();
         tabWidget->addTab(widget, QString());
         tab_6 = new QWidget();
         tab_6->setObjectName("tab_6");
         tabWidget->addTab(tab_6, QString());
+        tab = new QWidget();
+        tab->setObjectName("tab");
+        label_stat = new QLabel(tab);
+        label_stat->setObjectName("label_stat");
+        label_stat->setGeometry(QRect(30, -10, 521, 271));
+        tabWidget->addTab(tab, QString());
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName("menubar");
@@ -484,7 +495,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        tabWidget->setCurrentIndex(0);
+        tabWidget->setCurrentIndex(2);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -503,30 +514,11 @@ public:
         pushButton_13->setText(QCoreApplication::translate("MainWindow", "Settings", nullptr));
         pushButton_17->setText(QCoreApplication::translate("MainWindow", "Log-out", nullptr));
         label_8->setText(QCoreApplication::translate("MainWindow", "Recherche d'un examen par matiere :", nullptr));
-        QTableWidgetItem *___qtablewidgetitem = tableWidget->horizontalHeaderItem(0);
-        ___qtablewidgetitem->setText(QCoreApplication::translate("MainWindow", "idExamen", nullptr));
-        QTableWidgetItem *___qtablewidgetitem1 = tableWidget->horizontalHeaderItem(1);
-        ___qtablewidgetitem1->setText(QCoreApplication::translate("MainWindow", "NomExamen", nullptr));
-        QTableWidgetItem *___qtablewidgetitem2 = tableWidget->horizontalHeaderItem(2);
-        ___qtablewidgetitem2->setText(QCoreApplication::translate("MainWindow", "matiereExamen", nullptr));
-        QTableWidgetItem *___qtablewidgetitem3 = tableWidget->horizontalHeaderItem(3);
-        ___qtablewidgetitem3->setText(QCoreApplication::translate("MainWindow", "date_Examen", nullptr));
-        QTableWidgetItem *___qtablewidgetitem4 = tableWidget->horizontalHeaderItem(4);
-        ___qtablewidgetitem4->setText(QCoreApplication::translate("MainWindow", "dureeExamen", nullptr));
-        QTableWidgetItem *___qtablewidgetitem5 = tableWidget->horizontalHeaderItem(5);
-        ___qtablewidgetitem5->setText(QCoreApplication::translate("MainWindow", "Nbcopies", nullptr));
-        QTableWidgetItem *___qtablewidgetitem6 = tableWidget->horizontalHeaderItem(6);
-        ___qtablewidgetitem6->setText(QCoreApplication::translate("MainWindow", "niveau", nullptr));
-#if QT_CONFIG(tooltip)
-        tableWidget->setToolTip(QCoreApplication::translate("MainWindow", "<html><head/><body><p>background-color:rgb(10, 21, 91)</p></body></html>", nullptr));
-#endif // QT_CONFIG(tooltip)
-#if QT_CONFIG(whatsthis)
-        tableWidget->setWhatsThis(QCoreApplication::translate("MainWindow", "<html><head/><body><p><br/></p></body></html>", nullptr));
-#endif // QT_CONFIG(whatsthis)
         label_11->setText(QCoreApplication::translate("MainWindow", "Trier par :", nullptr));
-        comboBox->setItemText(0, QCoreApplication::translate("MainWindow", "niveau", nullptr));
-        comboBox->setItemText(1, QCoreApplication::translate("MainWindow", "date", nullptr));
-        comboBox->setItemText(2, QString());
+        comboBoxTri->setItemText(0, QCoreApplication::translate("MainWindow", "Trier par niveau", nullptr));
+        comboBoxTri->setItemText(1, QCoreApplication::translate("MainWindow", "Trier par mati\303\250re", nullptr));
+        comboBoxTri->setItemText(2, QCoreApplication::translate("MainWindow", "Trier par date", nullptr));
+        comboBoxTri->setItemText(3, QString());
 
         pushButton_14->setText(QCoreApplication::translate("MainWindow", "Exportation", nullptr));
         pushButton_15->setText(QCoreApplication::translate("MainWindow", "Modifier", nullptr));
@@ -534,16 +526,25 @@ public:
         pushButton_5->setText(QString());
         pushButton_18->setText(QCoreApplication::translate("MainWindow", "Supprimer", nullptr));
         updateButton->setText(QCoreApplication::translate("MainWindow", "Modifier", nullptr));
+        updateButton_2->setText(QCoreApplication::translate("MainWindow", "Telecharger", nullptr));
+        updateButton_3->setText(QCoreApplication::translate("MainWindow", "statistiques ", nullptr));
+        comboBoxTri_2->setItemText(0, QCoreApplication::translate("MainWindow", "ASC", nullptr));
+        comboBoxTri_2->setItemText(1, QCoreApplication::translate("MainWindow", "DESC", nullptr));
+
+        pushButton_6->setText(QString());
         label_3->setText(QCoreApplication::translate("MainWindow", "NomExamen", nullptr));
         label_4->setText(QCoreApplication::translate("MainWindow", "matiereExamen", nullptr));
         label_7->setText(QCoreApplication::translate("MainWindow", "Nbcopies", nullptr));
         addButton->setText(QCoreApplication::translate("MainWindow", "Valider", nullptr));
-        pushButton_12->setText(QCoreApplication::translate("MainWindow", "Annuler", nullptr));
         label_10->setText(QCoreApplication::translate("MainWindow", "date_Examen", nullptr));
         label_13->setText(QCoreApplication::translate("MainWindow", "Duree Examen", nullptr));
         label_9->setText(QCoreApplication::translate("MainWindow", "Niveau ", nullptr));
+        pushButton_12->setText(QCoreApplication::translate("MainWindow", "Annuler", nullptr));
+        refresh->setText(QString());
         tabWidget->setTabText(tabWidget->indexOf(widget), QCoreApplication::translate("MainWindow", "Ajouter un examen", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(tab_6), QCoreApplication::translate("MainWindow", "Fonctionalit\303\251s", nullptr));
+        label_stat->setText(QString());
+        tabWidget->setTabText(tabWidget->indexOf(tab), QCoreApplication::translate("MainWindow", "Stat", nullptr));
     } // retranslateUi
 
 };
