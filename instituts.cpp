@@ -99,12 +99,12 @@ instituts::instituts(QWidget *parent)
     /* ---------- Arduino 2 --------------------------------------------------- */
     connect(A.getserial(), &QSerialPort::readyRead,
             this          , &instituts::update_label_in);
-    switch (A.connect_Arduino2())
-    {
-    case  0: qDebug() << "Arduino2 connected on"  << A.getArduino2_port_name(); break;
-    case  1: qDebug() << "Arduino2 found but busy" << A.getArduino2_port_name(); break;
-    default: qDebug() << "Arduino2 not available";                               break;
-    }
+   // switch (A.connect_Arduino2())
+    //{
+    //case  0: qDebug() << "Arduino2 connected on"  << A.getArduino2_port_name(); break;
+    //case  1: qDebug() << "Arduino2 found but busy" << A.getArduino2_port_name(); break;
+    //default: qDebug() << "Arduino2 not available";                               break;
+    //}
 }
 
 instituts::~instituts()
@@ -114,7 +114,7 @@ instituts::~instituts()
 
 void instituts::update_label_in()
 {
-    QByteArray data2 = A.read_from_Arduino2().trimmed();
+    QByteArray data2 = A.read_from_arduino2().trimmed();
 
     if (data.length()==1 || (data2.length()==1 && data.length()!=3 && data2.toInt()<3))
         data += data2;
@@ -122,7 +122,7 @@ void instituts::update_label_in()
         data = data2;
 
     data = data.trimmed();
-    if (data2.length()==0) A.write_to_Arduino2("1");
+    if (data2.length()==0) A.write_to_arduino2("1");
 
     qDebug()<<"data"<<data<<"data2"<<data2;
 
@@ -145,10 +145,10 @@ void instituts::on_addButton_in_clicked()
 
     query.exec();
     if (query.next()) {
-        A.write_to_Arduino2("1");
+        A.write_to_arduino2("1");
     }
     else {
-        A.write_to_Arduino2("2");
+        A.write_to_arduino2("2");
         ui->label_in->setText("id non trouve");
     }
 }

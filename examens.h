@@ -1,9 +1,9 @@
-#ifndef EXAMENS_H
-#define EXAMENS_H
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
 
 #include <QMainWindow>
 #include <QSqlTableModel>
-#include "arduino.h"
+#include "arduino2.h"
 #include <QMainWindow>
 #include <QSqlTableModel>
 #include <QtPrintSupport/QPrinter>
@@ -19,16 +19,16 @@
 #include <QPageLayout>     // Nouveau pour Qt 6
 #include "examenclass.h"
 namespace Ui {
-class MainWindow;
+class examens;
 }
 
-class MainWindow : public QMainWindow
+class examens : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+    explicit examens(QWidget *parent = nullptr);
+    ~examens();
 
 private slots:
     void on_addButton_clicked();    // Slot pour le bouton "Valider"
@@ -77,7 +77,7 @@ private slots:
 
 
 private:
-    Ui::MainWindow *ui;
+    Ui::examens *ui;
 
     examenclass ex;
     int ID_EXAMEN;
@@ -85,9 +85,9 @@ private:
     QString object,body;
     QString extractText;
 
-    QByteArray data; // variable contenant les données reçues
+    QByteArray data3; // variable contenant les données reçues
 
-    Arduino A;
+    Arduino2 A;
     bool test;
 
 };

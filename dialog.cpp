@@ -20,6 +20,7 @@
 #include "livreurs.h"
 #include "boxs.h"
 #include "instituts.h"
+#include "examens.h"
 
 
 Dialog::Dialog(QWidget *parent)
@@ -543,5 +544,13 @@ void Dialog::on_pushButton_4_clicked()
     instituts *eqWindow = new instituts(this); // 'this' as parent to handle memory
     eqWindow->show();
     this->close();    // Show non-modally
+}
+
+
+void Dialog::on_pushButton_3_clicked()
+{
+    examens *aa = new examens(this); // 'this' as parent to handle memory
+    aa->show();
+    this->close();
 }
 

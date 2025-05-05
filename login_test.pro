@@ -19,6 +19,7 @@ SOURCES += \
     connection.cpp \
     dialog.cpp \
     equipments.cpp \
+    examenclass.cpp \
     examens.cpp \
     institut.cpp \
     instituts.cpp \      # <-- missed before
@@ -42,6 +43,7 @@ HEADERS += \
     connection.h \
     dialog.h \
     equipments.h \
+    examenclass.h \
     examens.h \
     institut.h \
     instituts.h \        # <-- missed before
@@ -57,6 +59,7 @@ FORMS += \
     boxs.ui \
     dialog.ui \
     equipments.ui \
+    examens.ui \
     instituts.ui \
     livreurs.ui \
     mainwindow.ui \

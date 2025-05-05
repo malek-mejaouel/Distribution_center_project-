@@ -1,35 +1,35 @@
-#include "Arduino2.h"
+#include "arduino2.h"
 
 Arduino2::Arduino2()
 {
     data="";
-    Arduino2_port_name="";
-    Arduino2_is_available=false;
+    arduino_port_name="";
+    arduino_is_available=false;
     serial=new QSerialPort;
 }
 
-QString Arduino2::getArduino2_port_name()
+QString Arduino2::getarduino_port_name()
 {
-    return Arduino2_port_name;
+    return arduino_port_name;
 }
 
 QSerialPort *Arduino2::getserial()
 {
     return serial;
 }
-int Arduino2::connect_Arduino2()
-{   // recherche du port sur lequel la carte Arduino2 identifée par  Arduino2_uno_vendor_id
+int Arduino2::connect_arduino()
+{   // recherche du port sur lequel la carte arduino identifée par  arduino_uno_vendor_id
     // est connectée
     foreach (const QSerialPortInfo &serial_port_info, QSerialPortInfo::availablePorts()){
         if(serial_port_info.hasVendorIdentifier() && serial_port_info.hasProductIdentifier()){
-            if(serial_port_info.vendorIdentifier() == Arduino2_uno_vendor_id && serial_port_info.productIdentifier()
-                                                                                    == Arduino2_uno_producy_id) {
-                Arduino2_is_available = true;
-                Arduino2_port_name=serial_port_info.portName();
+            if(serial_port_info.vendorIdentifier() == arduino_uno_vendor_id && serial_port_info.productIdentifier()
+                                                                                    == arduino_uno_producy_id) {
+                arduino_is_available = true;
+                arduino_port_name=serial_port_info.portName();
             } } }
-    qDebug() << "Arduino2_port_name is :" << Arduino2_port_name;
-    if(Arduino2_is_available){ // configuration de la communication ( débit...)
-        serial->setPortName(Arduino2_port_name);
+    qDebug() << "arduino_port_name is :" << arduino_port_name;
+    if(arduino_is_available){ // configuration de la communication ( débit...)
+        serial->setPortName(arduino_port_name);
         if(serial->open(QSerialPort::ReadWrite)){
             serial->setBaudRate(QSerialPort::Baud9600); // débit : 9600 bits/s
             serial->setDataBits(QSerialPort::Data8); //Longueur des données : 8 bits,
@@ -43,7 +43,7 @@ int Arduino2::connect_Arduino2()
     return -1;
 }
 
-int Arduino2::close_Arduino2()
+int Arduino2::close_arduino()
 
 {
 
@@ -57,7 +57,7 @@ int Arduino2::close_Arduino2()
 }
 
 
-QByteArray Arduino2::read_from_Arduino2()
+QByteArray Arduino2::read_from_arduino2()
 {
     if(serial->isReadable()){
         data=serial->readAll(); //récupérer les données reçues
@@ -67,12 +67,12 @@ QByteArray Arduino2::read_from_Arduino2()
 }
 
 
-void Arduino2::write_to_Arduino2( QByteArray d)
+void Arduino2::write_to_arduino2( QByteArray d)
 
 {
 
     if(serial->isWritable()){
-        serial->write(d);  // envoyer des donnés vers Arduino2
+        serial->write(d);  // envoyer des donnés vers Arduino
     }else{
         qDebug() << "Couldn't write to serial!";
     }

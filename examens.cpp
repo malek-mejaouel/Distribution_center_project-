@@ -1,4 +1,3 @@
-
 #include "examens.h"
 #include "ui_examens.h"
 #include "examenclass.h"
@@ -13,7 +12,7 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QSqlTableModel>
-
+#include "arduino2.h"
 // pour stat
 
 #include <QDialog>
@@ -40,16 +39,12 @@
 #include <QRegularExpressionValidator>
 #define seuil 65
 
-
-
-
-
-examens::examens(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::examens)
+examens::examens(QWidget *parent)
+    : QDialog(parent)
+    , ui(new Ui::examens)
 {
-    ui->setupUi(this);
 
+    ui->setupUi(this);
     test=false;
     ui->tableView->setModel( ex.afficher());
 
@@ -63,13 +58,13 @@ examens::examens(QWidget *parent) :
     ui->niveauSpinBox->setMinimum(1);
     ui->dateExamenDateEdit->setDate(QDate::currentDate());
     stat_niveau();
-    int ret=A.connect_arduino2(); // lancer la connexion à arduino2
+    int ret=A.connect_arduino(); // lancer la connexion à arduino
     switch(ret){
-    case(0):qDebug()<< "arduino2 is available and connected to : "<< A.getarduino2_port_name();
+    case(0):qDebug()<< "arduino is available and connected to : "<< A.getarduino_port_name();
         break;
-    case(1):qDebug() << "arduino2 is available but not connected to :" <<A.getarduino2_port_name();
+    case(1):qDebug() << "arduino is available but not connected to :" <<A.getarduino_port_name();
         break;
-    case(-1):qDebug() << "arduino2 is not available";
+    case(-1):qDebug() << "arduino is not available";
     }
     QObject::connect(A.getserial(),SIGNAL(readyRead()),this,SLOT(update_label()));
 }
@@ -83,32 +78,32 @@ void examens::update_label()
 {
 
     QByteArray data2=A.read_from_arduino2().trimmed();
-    if(data.length()==1 || (data2.length()==1 && data.length()!=3 && data2.toInt()<3) )data+=data2;
-    else if(!(data.length()==3 && data2.length()==1))    data=data2;
-    data=data.trimmed();
+    if(data3.length()==1 || (data2.length()==1 && data3.length()!=3 && data2.toInt()<3) )data3+=data2;
+    else if(!(data3.length()==3 && data2.length()==1))    data3=data2;
+    data3=data3.trimmed();
     if(data2.length()==0)A.write_to_arduino2("1");
 
 
 
 
-    // QString data2=A.read_from_arduino2();
-    qDebug()<<"data"<<data.trimmed();
+    // QString data2=A.read_from_arduino();
+    qDebug()<<"data"<<data3.trimmed();
     qDebug()<<"data 2"<<data2.trimmed();
     // qDebug()<<"data2"<<data2.trimmed();
 
 
-    if(data.length()>1 && data.length()<=3){
-        ui->label_5->setText(data.trimmed());
-        if(data.toInt()>seuil && ui->lineEdit_9->text().length()!=0){
+    if(data3.length()>1 && data3.length()<=3){
+        ui->label_5->setText(data3.trimmed());
+        if(data3.toInt()>seuil && ui->lineEdit_9->text().length()!=0){
             QSqlQuery query;
             query.prepare("UPDATE  EXAMENS SET NBRCOPIES=NBRCOPIES-1  WHERE IDEXAMEN=:id ");
             query.bindValue(":id", ui->lineEdit_9->text());
             query.exec();
 
-            ui->label_5->setText(data.trimmed());
+            ui->label_5->setText(data3.trimmed());
             /*else {
                       ui->label_5->setText("id non trouve");
-                      A.write_to_arduino2("2");
+                      A.write_to_arduino("2");
 
                       qDebug()<<"non okayy";
                       */
@@ -121,10 +116,10 @@ void examens::update_label()
     }
 
 
-    // si les données reçues de arduino2 via la liaison série sont égales à 1
+    // si les données reçues de arduino via la liaison série sont égales à 1
     // alors afficher ON
 
-    // si les données reçues de arduino2 via la liaison série sont égales à 0
+    // si les données reçues de arduino via la liaison série sont égales à 0
     //alors afficher ON
 }
 
@@ -1107,8 +1102,3 @@ void examens::on_addButton_2_clicked()
 
 
 }
-
-
-
-
-

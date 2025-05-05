@@ -18,7 +18,7 @@ bool Connection::createconnect()
 
     // Initialize the database connection using ODBC
     QSqlDatabase db = QSqlDatabase::addDatabase("QODBC", "qt_sql_default_connection"); // Specify connection name
-    db.setDatabaseName("base");  // Replace with your actual DSN name
+    db.setDatabaseName("test-bd");  // Replace with your actual DSN name
     db.setUserName("kinza");
     db.setPassword("kinza");
 
